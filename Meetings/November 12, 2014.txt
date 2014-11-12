@@ -1,0 +1,10 @@
+Meeting Time : November 12, 2014, 2:30-3:30 PM
+Meeting Place : Micro P Lab, Trottier 4th Floor
+
+Events: 
+- Discussed the project specifications, the pros and cons of active/passive localization 
+- Discussed tools to be used during project : Git and GitHub for the repository and all of the documents, group Facebook message for communications
+- Set next meeting time : Monday November 17, 2014, 1:30 PM 
+- Set Goals for next meeting: 
+	- Hamza and Cameron will work on setting up the documentation and researching the different types of localizations that we can do along with algorithms that we can use
+	- Julien and Abdul will work on the wireless communication
