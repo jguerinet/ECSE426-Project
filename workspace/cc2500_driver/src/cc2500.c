@@ -128,26 +128,29 @@ uint8_t CC2500_Strobe(StrobeCommand StrobeCmd, uint8_t RX_FIFO) {
 	CC2500_CS_LOW(); 
 	
 	//The address we'll be writing to 
-	uint8_t WriteAddr; 
+	uint8_t StrobeAddr; 
 	
 	//Check which FIFO status should be sent back with the status byte (page 24, CC2500)
 	if(RX_FIFO){
 		//Set the read/write bit if we want the RX FIFO
-		WriteAddr = ((uint8_t)StrobeCmd) | READWRITE_BIT; 
+		StrobeAddr = ((uint8_t)StrobeCmd) | READWRITE_BIT; 
 	}
 	else{
 		//If not, just use the StrobeCmd address
-		WriteAddr = (uint8_t)StrobeCmd; 
+		StrobeAddr = (uint8_t)StrobeCmd; 
 	}
 	
-	//Send the address of the register
-	CC2500_SendByte(WriteAddr); 
+	//Send the address of the register, get the response
+	uint8_t statusByte = CC2500_SendByte(StrobeAddr); 
 	
 	//Set the Chip Select to high at the end of the transmission 
 	//only for the SPWD and SXOFF strobes (page 24, CC2500)
 	if(StrobeCmd == (CC2500_STROBE_SPWD || CC2500_STROBE_SXOFF)){
 		CC2500_CS_HIGH(); 
 	}
+	
+	//Return the response
+	return statusByte; 
 }
 
 /**
