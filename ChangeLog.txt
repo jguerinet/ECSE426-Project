@@ -1,5 +1,5 @@
 2014-11-16, Julien Guerinet: 
-	- Completed the SendByte() method for the CC2500 driver. 
+	- Completed the SendByte() method for the CC2500 driver, untested. 
 2014-11-17, Julien Guerinet:
-	- Completed the CC2500_Write() method for the CC2500 driver.
-	- Completed the CC2500_Strobe() method for the CC2500 driver. 
+	- Completed the CC2500_Write() method for the CC2500 driver, untested.
+	- Completed the CC2500_Strobe() method for the CC2500 driver, untested. 
