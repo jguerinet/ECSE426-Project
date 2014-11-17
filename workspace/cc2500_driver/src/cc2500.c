@@ -10,6 +10,10 @@
 
 #include "cc2500.h"
 
+/* Set the burst bit to 1 if we are reading/writing multiple bytes
+7th bit of the header byte (page 21, CC2500) */ 
+#define BURST_BIT           ((uint8_t)0x40)
+
 /** @defgroup CC2500_Private_FunctionPrototypes
   * @{
   */
@@ -45,15 +49,39 @@ void CC2500_Read(uint8_t* pBuffer, uint8_t ReadAddr, uint16_t NumByteToRead) {
 }
 
 /**
-  * @brief  Writes one byte to the CC2500.
+  * @brief  Writes bytes to the CC2500.
   * @param  pBuffer : pointer to the buffer  containing the data to be written to the CC2500.
   * @param  WriteAddr : CC2500's internal address to write to.
   * @param  NumByteToWrite: Number of bytes to write.
   * @retval None
   */
 void CC2500_Write(uint8_t* pBuffer, uint8_t WriteAddr, uint16_t NumByteToWrite) {
-   // Code here
-   // uses CC2500_sendbyte
+	//Configure the header byte: burst access bit (B) and a 6-bit address (page 21, CC2500)
+	//If more than one register needs to be written to, set B to 1 (page 23, CC2500)
+	if(NumByteToWrite > 0x01){
+		WriteAddr |= BURST_BIT;
+	}	
+	
+	//Set the Chip Select to low at the beginning of the transmission (page 21, CC2500)
+	CC2500_CS_LOW(); 
+	
+	//Send the address of the register
+	CC2500_SendByte(WriteAddr); 
+	
+	//Then loop through all of the bytes that need ot be send (MSB first)
+	while(NumByteToWrite > 0x01){
+		//Send the current byte at the pBuffer address
+		CC2500_SendByte(*pBuffer);
+		
+		//Decrement the number of bytes to write
+		NumByteToWrite --; 
+		
+		//Increment the pBuffer pointer position
+		pBuffer ++; 
+	}
+	
+	//Set the Chip Select to high at the end of the transmission (page 23, CC2500)
+	CC2500_CS_HIGH(); 
 }
 
 /**
@@ -62,7 +90,7 @@ void CC2500_Write(uint8_t* pBuffer, uint8_t WriteAddr, uint16_t NumByteToWrite) 
   * @retval Status update received from CC2500
   */
 uint8_t CC2500_Strobe(StrobeCommand StrobeCmd) {
-   
+   //page 24
 }
 
 /**
