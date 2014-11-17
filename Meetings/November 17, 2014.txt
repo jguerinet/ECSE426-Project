@@ -1,0 +1,15 @@
+Meeting Time : November 17, 2014, 1:30-2:00 PM
+Meeting Place : Micro P Lab, Trottier 4th Floor
+
+Events: 
+- Discussed individual progress
+	- Hamza: Active Localization Research 
+	- Cameron: Passive Localization Research
+	- Abdul and Julien: Work on the CC2500 driver
+- Decided on using active localization for the project
+- Next Stand-up (Facebook) meeting : Friday November 21, 2014
+- Set next meeting time : Monday November 24, 2014, 1:30 PM 
+- Set Goals for next meeting: 
+	- Hamza will work on the LCD screen, with the goal of having this part ready for next meeting
+	- Cameron will work on the motion sensor, with the goal of having this part ready for next meeting
+	- Julien and Abdul will continue working on the wireless communication, with the goal of finishing the driver and the reception/transmission of data
