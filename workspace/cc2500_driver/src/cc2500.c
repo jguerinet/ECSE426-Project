@@ -10,6 +10,8 @@
 
 #include "cc2500.h"
 
+/* Set the Read/Write bit to 1 if we are reading, 0 if we are writing */
+#define READWRITE_BIT 			((uint8_t)0x80)
 /* Set the burst bit to 1 if we are reading/writing multiple bytes
 7th bit of the header byte (page 21, CC2500) */ 
 #define BURST_BIT           ((uint8_t)0x40)
@@ -87,10 +89,35 @@ void CC2500_Write(uint8_t* pBuffer, uint8_t WriteAddr, uint16_t NumByteToWrite) 
 /**
   * @brief  Sends a single strobe command to CC2500
   * @param  Strobe command to send
+	* @param 	1 for the FIFO_BYTES_AVAILABLE field in status byte should be for 
+			the RX FIFO, 0 if it should be for the TX FIFO
   * @retval Status update received from CC2500
   */
-uint8_t CC2500_Strobe(StrobeCommand StrobeCmd) {
-   //page 24
+uint8_t CC2500_Strobe(StrobeCommand StrobeCmd, uint8_t RX_FIFO) {
+	//Set the Chip Select to low at the beginning of the transmission (page 21, CC2500)
+	CC2500_CS_LOW(); 
+	
+	//The address we'll be writing to 
+	uint8_t WriteAddr; 
+	
+	//Check which FIFO status should be sent back with the status byte (page 24, CC2500)
+	if(RX_FIFO){
+		//Set the read/write bit if we want the RX FIFO
+		WriteAddr = ((uint8_t)StrobeCmd) | READWRITE_BIT; 
+	}
+	else{
+		//If not, just use the StrobeCmd address
+		WriteAddr = (uint8_t)StrobeCmd; 
+	}
+	
+	//Send the address of the register
+	CC2500_SendByte(WriteAddr); 
+	
+	//Set the Chip Select to high at the end of the transmission 
+	//only for the SPWD and SXOFF strobes (page 24, CC2500)
+	if(StrobeCmd == (CC2500_STROBE_SPWD || CC2500_STROBE_SXOFF)){
+		CC2500_CS_HIGH(); 
+	}
 }
 
 /**
