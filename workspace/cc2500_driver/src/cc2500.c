@@ -72,7 +72,17 @@ uint8_t CC2500_Strobe(StrobeCommand StrobeCmd) {
   * @retval The received byte value
   */
 static uint8_t CC2500_SendByte(uint8_t byte) {
-   // Code here
+   //Wait until the SPI transmit buffer is empty (page 704, Reference Manual)
+	while(SPI_I2S_GetFlagStatus(CC2500_SPI, SPI_I2S_RXNE) == RESET){}
+		
+	//Once the buffer is empty, send the byte through the SPI peripheral
+	SPI_I2S_SendData(CC2500_SPI, byte); 
+		
+	//Wait until the SPI receive buffer has something (page 705, Reference Manual)
+	while(SPI_I2S_GetFlagStatus(CC2500_SPI, SPI_I2S_FLAG_RXNE){}\
+		
+	//Once the buffer has something, return it 
+	return (uint8_t)SPI_I2S_ReceiveData(CC2500_SPI); 
 }
 
 /**
