@@ -15,6 +15,8 @@
 /* Set the burst bit to 1 if we are reading/writing multiple bytes
 7th bit of the header byte (page 21, CC2500) */ 
 #define BURST_BIT           ((uint8_t)0x40)
+/* Dummy Byte Send by the SPI Master device in order to generate the Clock to the Slave device */
+#define DUMMY_BYTE          ((uint8_t)0x00)
 
 /** @defgroup CC2500_Private_FunctionPrototypes
   * @{
@@ -46,8 +48,36 @@ void CC2500_Init(void) {
   * @retval None
   */
 void CC2500_Read(uint8_t* pBuffer, uint8_t ReadAddr, uint16_t NumByteToRead) {
-   // Code here
-   // uses CC2500_sendbyte
+  //Configure the header byte: burst access bit (B) and a 6-bit address (page 21, CC2500)
+	//If more than one register needs to be written to, set B to 1 (page 23, CC2500)
+	//Regardless, set the read/write bit 
+	if(NumByteToWrite > 0x01){
+		ReadAddr |= BURST_BIT | READWRITE_BIT;
+	}	
+	else{
+		ReadAddr |= READWRITE_BIT;
+	}
+	
+	//Set the Chip Select to low at the beginning of the transmission (page 21, CC2500)
+	CC2500_CS_LOW(); 
+	
+	//Send the address of the register
+	CC2500_SendByte(ReadAddr); 
+	
+	//Then loop through the number of bytes that need to be read (MSB first)
+	while(NumByteToRead > 0x00){
+		//Send a dummy byte, store the response in the buffer
+		*pBuffer = CC2500_SendByte(DUMMY_BYTE);
+		
+		//Decrement the number of bytes to read
+		NumByteToRead --; 
+		
+		//Increment the pBuffer pointer position
+		pBuffer ++; 
+	}
+	
+	//Set the Chip Select to high at the end of the transmission (page 23, CC2500)
+	CC2500_CS_HIGH(); 
 }
 
 /**

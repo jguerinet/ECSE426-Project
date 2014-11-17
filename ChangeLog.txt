@@ -3,3 +3,4 @@
 2014-11-17, Julien Guerinet:
 	- Completed the CC2500_Write() method for the CC2500 driver, untested.
 	- Completed the CC2500_Strobe() method for the CC2500 driver, untested. 
+	- Completed the CC2500_Read() method for the CC2500 driver, untested.
