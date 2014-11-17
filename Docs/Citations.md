@@ -1,5 +1,4 @@
 #Citations#
-***
 
 Passive Localization Research
 
@@ -17,3 +16,11 @@ Abstract: This letter addresses the problem of localization in a quasi-synchrono
 keywords: {time-of-arrival estimation;transceivers;BCRB;Bayesian Cramer-Rao lower bound;TDOA;TOA based algorithms;TOA based passive localization;TOA measurements;linear algorithm;passive object;quasisynchronous networks;time-difference-of-arrival;time-of-arrival measurements;Bayes methods;Estimation;Receivers;Synchronization;Transceivers;Transmitters;Vectors;BCRB;Localization;TOA},
 URL: http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6746730&isnumber=6798887
 
+- From Wikipedia
+>Angle of arrival[edit]
+Angle of arrival (AoA) is the angle from which a signal arrives at a receiver. AoA is usually determined by measuring the time difference of arrival (TDOA) between multiple antennas in a sensor array. In other receivers, it is determined by an array of highly directional sensors—the angle can be determined by which sensor received the signal. AoA is usually used with triangulation and a known base line to find the location relative to two anchor transmitters.
+
+>Time of arrival[edit]
+Time of arrival (ToA, also time of flight) is the amount of time a signal takes to propagate from transmitter to receiver. Because the signal propagation rate is constant and known (ignoring differences in mediums) the travel time of a signal can be used to directly calculate distance. Multiple measurements can be combined with trilateration and multilateration to find a location. This is the technique used by GPS. Systems which use ToA, generally require a complicated synchronization mechanism to maintain a reliable source of time for sensors (though this can be avoided in carefully designed systems by using repeaters to establish coupling[8]).
+
+>The accuracy of the TOA based methods often suffers from massive multipath conditions in indoor localization, which is caused by the reflection and diffraction of the RF signal from objects (e.g., interior wall, doors or furniture) in the environment. However, it is possible to reduce the effect of multipath by applying temporal or spatial sparsity based techniques.[27] [28]
