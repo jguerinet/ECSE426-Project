@@ -1,0 +1,2 @@
+2014-11-16, Julien Guerinet: 
+	- Completed the SendByte() method for the CC2500 driver. 
