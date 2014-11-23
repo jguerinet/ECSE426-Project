@@ -11,3 +11,5 @@
 	- Fixed bugs in GPIO pin assignments in cc2500.h
 	- Fixed corner case in CC2500_SendByte() function to allow sending data as small as 1 byte.
 	- Added CC2500_StatusReg() function which reads status registers, tested and works.
+2014-11-23, Abdul Haseeb Jehangir:
+	- Fixed bug in CC2500_StatusReg() function. It was missing CS_HIGH() command.
