@@ -34,11 +34,123 @@ void CC2500_Init(void) {
    
    CC2500_LowLevel_Init();
    
-   // code here
-   // Do config defined in project specification
-   // set registers using CC2500_sendbyte
+   uint8_t reg;
+   
+   reg = (uint8_t)SMARTRF_SETTING_FSCTRL1;
+   CC2500_Write(&reg, CC2500_CFG_REG_FSCTRL1, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_FSCTRL0;
+   CC2500_Write(&reg, CC2500_CFG_REG_FSCTRL0, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_FREQ2;
+   CC2500_Write(&reg, CC2500_CFG_REG_FREQ2, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_FREQ1;
+   CC2500_Write(&reg, CC2500_CFG_REG_FREQ1, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_FREQ0;
+   CC2500_Write(&reg, CC2500_CFG_REG_FREQ0, 1);   
+   
+   reg = (uint8_t)SMARTRF_SETTING_MDMCFG4;
+   CC2500_Write(&reg, CC2500_CFG_REG_MDMCFG4, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_MDMCFG3;
+   CC2500_Write(&reg, CC2500_CFG_REG_MDMCFG3, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_MDMCFG2;
+   CC2500_Write(&reg, CC2500_CFG_REG_MDMCFG2, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_MDMCFG1;
+   CC2500_Write(&reg, CC2500_CFG_REG_MDMCFG1, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_MDMCFG0;
+   CC2500_Write(&reg, CC2500_CFG_REG_MDMCFG0, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_CHANNR;
+   CC2500_Write(&reg, CC2500_CFG_REG_CHANNR, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_DEVIATN;
+   CC2500_Write(&reg, CC2500_CFG_REG_DEVIATN, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_MDMCFG0;
+   CC2500_Write(&reg, CC2500_CFG_REG_MDMCFG0, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_FREND1;
+   CC2500_Write(&reg, CC2500_CFG_REG_FRIEND1, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_FREND0;
+   CC2500_Write(&reg, CC2500_CFG_REG_FRIEND0, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_MCSM0;
+   CC2500_Write(&reg, CC2500_CFG_REG_MCSM0, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_FOCCFG;
+   CC2500_Write(&reg, CC2500_CFG_REG_FOCCFG, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_BSCFG;
+   CC2500_Write(&reg, CC2500_CFG_REG_BSCFG, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_MDMCFG0;
+   CC2500_Write(&reg, CC2500_CFG_REG_MDMCFG0, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_AGCCTRL2;
+   CC2500_Write(&reg, CC2500_CFG_REG_AGCCTRL2, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_AGCCTRL1;
+   CC2500_Write(&reg, CC2500_CFG_REG_AGCCTRL1, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_AGCCTRL0;
+   CC2500_Write(&reg, CC2500_CFG_REG_AGCCTRL0, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_FSCAL3;
+   CC2500_Write(&reg, CC2500_CFG_REG_FSCAL3, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_FSCAL2;
+   CC2500_Write(&reg, CC2500_CFG_REG_FSCAL2, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_FSCAL1;
+   CC2500_Write(&reg, CC2500_CFG_REG_FSCAL1, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_FSCAL0;
+   CC2500_Write(&reg, CC2500_CFG_REG_FSCAL0, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_FSTEST;
+   CC2500_Write(&reg, CC2500_CFG_REG_FSTEST, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_TEST2;
+   CC2500_Write(&reg, CC2500_CFG_REG_TEST2, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_TEST1;
+   CC2500_Write(&reg, CC2500_CFG_REG_TEST1, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_TEST0;
+   CC2500_Write(&reg, CC2500_CFG_REG_TEST0, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_FIFOTHR;
+   CC2500_Write(&reg, CC2500_CFG_REG_FIFOTHR, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_IOCFG2;
+   CC2500_Write(&reg, CC2500_CFG_REG_IOCFG2, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_IOCFG0;
+   CC2500_Write(&reg, CC2500_CFG_REG_IOCFG0, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_PKTCTRL1;
+   CC2500_Write(&reg, CC2500_CFG_REG_PKTCTRL1, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_PKTCTRL0;
+   CC2500_Write(&reg, CC2500_CFG_REG_PKTCTRL0, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_ADDR;
+   CC2500_Write(&reg, CC2500_CFG_REG_ADDR, 1);
+   
+   reg = (uint8_t)SMARTRF_SETTING_PKTLEN;
+   CC2500_Write(&reg, CC2500_CFG_REG_PKTLEN, 1);
+   
+   //CC2500_Strobe(CC2500_STROBE_SRX, DUMMY_BYTE);
+   //CC2500_Strobe(CC2500_STROBE_STX, DUMMY_BYTE);
+   //CC2500_Strobe(CC2500_STROBE_SIDLE, DUMMY_BYTE);
 }
-
 
 /**
   * @brief  Reads a block of data from the CC2500.
@@ -51,7 +163,7 @@ void CC2500_Read(uint8_t* pBuffer, uint8_t ReadAddr, uint16_t NumByteToRead) {
   //Configure the header byte: burst access bit (B) and a 6-bit address (page 21, CC2500)
 	//If more than one register needs to be written to, set B to 1 (page 23, CC2500)
 	//Regardless, set the read/write bit 
-	if(NumByteToWrite > 0x01){
+	if(NumByteToRead > 0x01){
 		ReadAddr |= BURST_BIT | READWRITE_BIT;
 	}	
 	else{
@@ -70,10 +182,10 @@ void CC2500_Read(uint8_t* pBuffer, uint8_t ReadAddr, uint16_t NumByteToRead) {
 		*pBuffer = CC2500_SendByte(DUMMY_BYTE);
 		
 		//Decrement the number of bytes to read
-		NumByteToRead --; 
+		NumByteToRead--; 
 		
 		//Increment the pBuffer pointer position
-		pBuffer ++; 
+		pBuffer++; 
 	}
 	
 	//Set the Chip Select to high at the end of the transmission (page 23, CC2500)
@@ -92,7 +204,7 @@ void CC2500_Write(uint8_t* pBuffer, uint8_t WriteAddr, uint16_t NumByteToWrite) 
 	//If more than one register needs to be written to, set B to 1 (page 23, CC2500)
 	if(NumByteToWrite > 0x01){
 		WriteAddr |= BURST_BIT;
-	}	
+	}
 	
 	//Set the Chip Select to low at the beginning of the transmission (page 21, CC2500)
 	CC2500_CS_LOW(); 
@@ -161,13 +273,13 @@ uint8_t CC2500_Strobe(StrobeCommand StrobeCmd, uint8_t RX_FIFO) {
   */
 static uint8_t CC2500_SendByte(uint8_t byte) {
    //Wait until the SPI transmit buffer is empty (page 704, Reference Manual)
-	while(SPI_I2S_GetFlagStatus(CC2500_SPI, SPI_I2S_RXNE) == RESET){}
+	while(SPI_I2S_GetFlagStatus(CC2500_SPI, SPI_I2S_FLAG_TXE) == RESET);
 		
 	//Once the buffer is empty, send the byte through the SPI peripheral
 	SPI_I2S_SendData(CC2500_SPI, byte); 
 		
 	//Wait until the SPI receive buffer has something (page 705, Reference Manual)
-	while(SPI_I2S_GetFlagStatus(CC2500_SPI, SPI_I2S_FLAG_RXNE){}\
+	while(SPI_I2S_GetFlagStatus(CC2500_SPI, SPI_I2S_FLAG_RXNE) == RESET);
 		
 	//Once the buffer has something, return it 
 	return (uint8_t)SPI_I2S_ReceiveData(CC2500_SPI); 
