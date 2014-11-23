@@ -147,7 +147,7 @@ CC2500_STROBE_SNOP         =      ((uint8_t)0x3D)
 /** @defgroup CC2500 Wireless Configuration Settings
   * @{
   */ 
-#define SMARTRF_SETTING_FSCTRL1 0x0C//0x12 //Frequency offset = 457kHz
+#define SMARTRF_SETTING_FSCTRL1 0x00//0x12 //Frequency offset = 304kHz
 #define SMARTRF_SETTING_FSCTRL0 0x00
 #define SMARTRF_SETTING_FREQ2 0x5D // Carrier Frequency is 2.433GHz
 #define SMARTRF_SETTING_FREQ1 0x93
@@ -196,4 +196,5 @@ void CC2500_Init(void);
 void CC2500_Write(uint8_t* pBuffer, uint8_t WriteAddr, uint16_t NumByteToWrite);
 void CC2500_Read(uint8_t* pBuffer, uint8_t ReadAddr, uint16_t NumByteToRead);
 uint8_t CC2500_Strobe(StrobeCommand StrobeCmd, uint8_t RX_FIFO);
+uint8_t CC2500_StatusReg(uint8_t StatusRegAddr);
 //uint8_t CC2500_Strobe(StrobeCommand StrobeCmd);

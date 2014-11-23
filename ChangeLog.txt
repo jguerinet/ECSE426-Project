@@ -7,4 +7,7 @@
 2014-11-22, Abdul Haseeb Jehangir:
 	- Completed the CC2500_Init() method for the CC2500 driver, untested.
 	- Fixed compile errors in CC2500_Write()/Read()/Strobe() functions.
-	- Added project wireless configuration to CC2500.h file.
+	- Added project wireless configuration to CC2500.h
+	- Fixed bugs in GPIO pin assignments in cc2500.h
+	- Fixed corner case in CC2500_SendByte() function to allow sending data as small as 1 byte.
+	- Added CC2500_StatusReg() function which reads status registers, tested and works.

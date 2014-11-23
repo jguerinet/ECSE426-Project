@@ -9,7 +9,7 @@
 	**/
 
 #include "cc2500.h"
-
+#include <stdio.h>
 /* Set the Read/Write bit to 1 if we are reading, 0 if we are writing */
 #define READWRITE_BIT 			((uint8_t)0x80)
 /* Set the burst bit to 1 if we are reading/writing multiple bytes
@@ -175,8 +175,7 @@ void CC2500_Read(uint8_t* pBuffer, uint8_t ReadAddr, uint16_t NumByteToRead) {
 	CC2500_CS_LOW(); 
 	
 	//Send the address of the register
-	CC2500_SendByte(ReadAddr); 
-	
+	CC2500_SendByte(ReadAddr);
 	//Then loop through the number of bytes that need to be read (MSB first)
 	while(NumByteToRead > 0x00){
 		//Send a dummy byte, store the response in the buffer
@@ -200,8 +199,7 @@ void CC2500_Read(uint8_t* pBuffer, uint8_t ReadAddr, uint16_t NumByteToRead) {
   * @param  NumByteToWrite: Number of bytes to write.
   * @retval None
   */
-void CC2500_Write(uint8_t* pBuffer, uint8_t WriteAddr, uint16_t NumByteToWrite) {
-	//Configure the header byte: burst access bit (B) and a 6-bit address (page 21, CC2500)
+void CC2500_Write(uint8_t* pBuffer, uint8_t WriteAddr, uint16_t NumByteToWrite) {//Configure the header byte: burst access bit (B) and a 6-bit address (page 21, CC2500)
 	//If more than one register needs to be written to, set B to 1 (page 23, CC2500)
 	if(NumByteToWrite > 0x01){
 		WriteAddr |= BURST_BIT;
@@ -212,12 +210,11 @@ void CC2500_Write(uint8_t* pBuffer, uint8_t WriteAddr, uint16_t NumByteToWrite) 
 	
 	//Send the address of the register
 	CC2500_SendByte(WriteAddr); 
-	
 	//Then loop through all of the bytes that need ot be send (MSB first)
-	while(NumByteToWrite > 0x01){
+	while(NumByteToWrite > 0x00){
 		//Send the current byte at the pBuffer address
 		CC2500_SendByte(*pBuffer);
-		
+
 		//Decrement the number of bytes to write
 		NumByteToWrite--; 
 		
@@ -263,7 +260,24 @@ uint8_t CC2500_Strobe(StrobeCommand StrobeCmd, uint8_t RX_FIFO) {
 	}
 	
 	//Return the response
-	return statusByte; 
+	return statusByte;
+}
+
+/**
+  * @brief  Read status registor on he device
+  * @param  Address of the status register to read
+  * @retval Status register bits received from CC2500
+  */
+uint8_t CC2500_StatusReg(uint8_t StatusRegAddr) {
+	uint8_t reg;
+	//Set the Chip Select to low at the beginning of the transmission (page 21, CC2500)
+	CC2500_CS_LOW();
+	
+	// set burst bit to high to distinct from strobe command (page 5, cc2500 design note)
+	StatusRegAddr |= BURST_BIT;
+	CC2500_Read(&reg, StatusRegAddr, 1);
+  
+	return reg;
 }
 
 /**
@@ -272,7 +286,7 @@ uint8_t CC2500_Strobe(StrobeCommand StrobeCmd, uint8_t RX_FIFO) {
   * @param  Byte : Byte send.
   * @retval The received byte value
   */
-static uint8_t CC2500_SendByte(uint8_t byte) {
+uint8_t CC2500_SendByte(uint8_t byte) {
    //Wait until the SPI transmit buffer is empty (page 704, Reference Manual)
 	while(SPI_I2S_GetFlagStatus(CC2500_SPI, SPI_I2S_FLAG_TXE) == RESET);
 		
