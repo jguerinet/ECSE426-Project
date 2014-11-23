@@ -1,0 +1,13 @@
+This is the polynomial regression found with the polyfit function with degree 2. This is a least-squares fit.
+  
+  1.0e+03 *    [0.0002   -0.0496    3.6128]
+  
+  [0.199902975196924	-49.5775589447857	3612.83759672340]
+  
+  
+Polyfit regression degree 3
+ 
+  1.0e+03 *
+
+   -0.00199792193559612	0.679404239739992	-82.9428552692408	4236.18924062939
+ 

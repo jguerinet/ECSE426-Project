@@ -1,0 +1,1 @@
+charData.mat contains matlab variables for the vectors and their means of readings of proximity sensor data at 10cm intervals from a flat surface.
