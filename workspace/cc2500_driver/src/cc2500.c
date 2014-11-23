@@ -34,6 +34,7 @@ void CC2500_Init(void) {
    
    CC2500_LowLevel_Init();
    
+	 // Wireless configuration as defined on project specification page 9
    uint8_t reg;
    
    reg = (uint8_t)SMARTRF_SETTING_FSCTRL1;
@@ -147,9 +148,9 @@ void CC2500_Init(void) {
    reg = (uint8_t)SMARTRF_SETTING_PKTLEN;
    CC2500_Write(&reg, CC2500_CFG_REG_PKTLEN, 1);
    
-   //CC2500_Strobe(CC2500_STROBE_SRX, DUMMY_BYTE);
-   //CC2500_Strobe(CC2500_STROBE_STX, DUMMY_BYTE);
-   //CC2500_Strobe(CC2500_STROBE_SIDLE, DUMMY_BYTE);
+   CC2500_Strobe(CC2500_STROBE_SRX, DUMMY_BYTE);
+   CC2500_Strobe(CC2500_STROBE_STX, DUMMY_BYTE);
+   CC2500_Strobe(CC2500_STROBE_SIDLE, DUMMY_BYTE);
 }
 
 /**
@@ -218,10 +219,10 @@ void CC2500_Write(uint8_t* pBuffer, uint8_t WriteAddr, uint16_t NumByteToWrite) 
 		CC2500_SendByte(*pBuffer);
 		
 		//Decrement the number of bytes to write
-		NumByteToWrite --; 
+		NumByteToWrite--; 
 		
 		//Increment the pBuffer pointer position
-		pBuffer ++; 
+		pBuffer++; 
 	}
 	
 	//Set the Chip Select to high at the end of the transmission (page 23, CC2500)
@@ -344,7 +345,7 @@ static void CC2500_LowLevel_Init(void)
    GPIO_Init(CC2500_SPI_CS_GPIO_PORT, &GPIO_InitStructure);
    
    /* Deselect : Chip Select high */
-   GPIO_SetBits(CC2500_SPI_CS_GPIO_PORT, CC2500_SPI_CS_PIN);
+   CC2500_CS_HIGH();
    
      /* Configure GPIO PINs to detect Interrupts */
    GPIO_InitStructure.GPIO_Pin = CC2500_SPI_INT_PIN;
