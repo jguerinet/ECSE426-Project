@@ -4,3 +4,7 @@
 	- Completed the CC2500_Write() method for the CC2500 driver, untested.
 	- Completed the CC2500_Strobe() method for the CC2500 driver, untested. 
 	- Completed the CC2500_Read() method for the CC2500 driver, untested.
+2014-11-22, Abdul Haseeb Jehangir:
+	- Completed the CC2500_Init() method for the CC2500 driver, untested.
+	- Fixed compile errors in CC2500_Write()/Read()/Strobe() functions.
+	- Added project wireless configuration to CC2500.h file.
