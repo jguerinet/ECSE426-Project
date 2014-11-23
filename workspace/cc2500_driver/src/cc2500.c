@@ -276,7 +276,9 @@ uint8_t CC2500_StatusReg(uint8_t StatusRegAddr) {
 	// set burst bit to high to distinct from strobe command (page 5, cc2500 design note)
 	StatusRegAddr |= BURST_BIT;
 	CC2500_Read(&reg, StatusRegAddr, 1);
-  
+ 	
+	// set the chip select to high marking end of transmission	
+	CC2500_CS_HIGH(); 
 	return reg;
 }
 
