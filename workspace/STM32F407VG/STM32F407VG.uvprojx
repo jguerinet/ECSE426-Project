@@ -364,7 +364,7 @@
               <MiscControls>--c99</MiscControls>
               <Define>HSE_VALUE=8000000 USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>.\source</IncludePath>
+              <IncludePath>.\source;../cc2500_driver/inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -420,7 +420,7 @@
             <File>
               <FileName>cc2500.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\cc2500_driver\cc2500.c</FilePath>
+              <FilePath>..\cc2500_driver\src\cc2500.c</FilePath>
             </File>
           </Files>
         </Group>

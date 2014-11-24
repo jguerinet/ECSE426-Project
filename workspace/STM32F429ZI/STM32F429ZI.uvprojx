@@ -364,7 +364,7 @@
               <MiscControls>--c99</MiscControls>
               <Define>HSE_VALUE=8000000 USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>.\inc;.\src</IncludePath>
+              <IncludePath>.\inc;.\src;../cc2500_driver/inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -446,6 +446,16 @@
               <FileName>stm32f429i_discovery_l3gd20.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\stm32f429i_discovery_l3gd20.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>cc2500</GroupName>
+          <Files>
+            <File>
+              <FileName>cc2500.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\cc2500_driver\src\cc2500.c</FilePath>
             </File>
           </Files>
         </Group>
