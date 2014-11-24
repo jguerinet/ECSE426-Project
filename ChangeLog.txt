@@ -13,3 +13,5 @@
 	- Added CC2500_StatusReg() function which reads status registers, tested and works.
 2014-11-23, Abdul Haseeb Jehangir:
 	- Fixed bug in CC2500_StatusReg() function. It was missing CS_HIGH() command.
+2014-11-24, Julien Guerinet:
+	- Added the base projects for both boards, added the dependencies to the CC2500 driver. 
