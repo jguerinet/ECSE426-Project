@@ -45,7 +45,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\obj\</OutputDirectory>
-          <OutputName>RTX Base Project</OutputName>
+          <OutputName>User Project</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
@@ -72,6 +72,8 @@
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
+            <nStopB1X>0</nStopB1X>
+            <nStopB2X>0</nStopB2X>
           </BeforeMake>
           <AfterMake>
             <RunUserProg1>0</RunUserProg1>
@@ -128,6 +130,7 @@
             <RestoreFunctions>1</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
+            <RestoreSysVw>1</RestoreSysVw>
           </Simulator>
           <Target>
             <UseTarget>1</UseTarget>
@@ -139,8 +142,8 @@
             <RestoreFunctions>0</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>1</RestoreTracepoints>
-            <RestoreTracepoints>1</RestoreTracepoints>
-            <RestoreTracepoints>1</RestoreTracepoints>
+            <RestoreSysVw>1</RestoreSysVw>
+            <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
           <TargetSelection>11</TargetSelection>
@@ -361,7 +364,7 @@
               <MiscControls>--c99</MiscControls>
               <Define>HSE_VALUE=8000000 USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>.\src;.\inc;.\Accelerometer_Drivers\inc;.\cc2500_driver\inc;.\RTE\Device\STM32F407VG;.\RTE</IncludePath>
+              <IncludePath>.\src;.\inc;.\RTE\Device\STM32F407VG;.\RTE</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -417,27 +420,17 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Accelerometer_Drivers</GroupName>
-          <Files>
-            <File>
-              <FileName>lis3dsh.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Accelerometer_Drivers\src\lis3dsh.c</FilePath>
-            </File>
-            <File>
-              <FileName>lis302dl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Accelerometer_Drivers\src\lis302dl.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>CC2500_Drivers</GroupName>
           <Files>
             <File>
+              <FileName>cc2500.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\inc\cc2500.h</FilePath>
+            </File>
+            <File>
               <FileName>cc2500.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\cc2500_driver\src\cc2500.c</FilePath>
+              <FilePath>..\cc2500_driver\cc2500.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -647,7 +640,7 @@
 
   <RTE>
     <apis>
-      <api Capiversion="1.0" Cclass="CMSIS" Cgroup="RTOS" Cvendor="ARM" exclusive="1">
+      <api Capiversion="1.0" Cclass="CMSIS" Cgroup="RTOS" exclusive="1">
         <package name="CMSIS" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="ARM" version="4.1.1"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
