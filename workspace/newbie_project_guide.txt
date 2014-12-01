@@ -1,0 +1,5 @@
+This document provides the explanations of all of the projects in this folder. 
+- Main Board refers to the board with the LCD screen (STM32F429ZI), which is our main board for this project
+- User Board refers to the board that will be on the person for active localization
+- Aux Board refers to the third board which will be used to determine the user's position using fingerprinting. 
+- cc2500_driver refers to the driver source file. This is the same for each board. The header of this file is specific to each board (this defines the pins used)
