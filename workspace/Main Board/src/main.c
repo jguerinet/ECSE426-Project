@@ -5,143 +5,244 @@
 #define osObjectsPublic                     // define objects in main module
 #include "osObjects.h"                      // RTOS object definitions
 #include "stm32f4xx.h"                  // Device header
-
 #include "stm32f4xx_conf.h"
-#include "stm32f429i_discovery.h"
-#include "stm32f429i_discovery_lcd.h"
-#include "stm32f429i_discovery_l3gd20.h"
-#include "background16bpp.h"
-
 #include <stdio.h>
-#include <string.h>
+#include "cc2500.h"
 
 
-static void delay(__IO uint32_t nCount)
-{
-  __IO uint32_t index = 0; 
-  for(index = 100000*nCount; index != 0; index--)
-  {
-  }
+#define RX_PKT 0x01
+
+void wireless_init(void);
+
+
+// ID for thread
+osThreadId	Rx_thread;
+osThreadId  Tx_thread;
+	
+void Blinky_GPIO_Init(void){
+	GPIO_InitTypeDef GPIO_InitStructure;
+	
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_13| GPIO_Pin_14| GPIO_Pin_15;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+  GPIO_Init(GPIOD, &GPIO_InitStructure);
+	
 }
 
-double x_c = 3.5;
-double y_c = 2.5;
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/**
-  * @brief    Illustartes a simple animation program
-  * @function This function draws concentrated circles emanating from the center towards the LCD edge in
-              an animated fashion. It will look as a sonar or radar display. Then it simulates locking 
-              onto a target by flashing a small red circle and displaying the text "Object located"
-  * @param    None
-  * @retval   None
-  */
-
-void locate(void const *argument){
+void RxPacket(void const *argument){
+	uint8_t buf;
+	uint8_t packet[4];
+   float rssi;
+	GPIO_ResetBits(GPIOD, GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
+	printf("Thread_started. waitig for sigal\n");
+	CC2500_Strobe(CC2500_STROBE_SRX, 0x00);
 	while(1){
-			/* Clear the LCD */ 
-		LCD_Clear(LCD_COLOR_WHITE);
-		LCD_SetFont(&Font8x8);
-		LCD_DisplayStringLine(LINE(1), (uint8_t*)"Tracking");
-		
-		
-		int i = 0;
-		int j = 0;
-		
-		LCD_SetTextColor(LCD_COLOR_BLUE2);
-
-		
-		for (i=10; i <= 310; i = i+60){
-			LCD_DrawLine(10, i, 220, LCD_DIR_HORIZONTAL);
-		}
-
-		for (j=10; j <= 230; j = j+44){
-			LCD_DrawLine(j, 10, 300, LCD_DIR_VERTICAL);
-		}
-		
-		double x_mapped = (x_c+(10/44))*44;
-		double y_mapped = (y_c+(10/60))*60;
-		
-		if (x_mapped < 220 & y_mapped < 300){
-			LCD_SetTextColor(LCD_COLOR_RED);
-			LCD_DrawFullCircle(x_mapped,y_mapped,4);
-			delay(125);
-			LCD_SetTextColor(LCD_COLOR_WHITE);
-			LCD_DrawFullCircle(x_mapped,y_mapped,4);
-			delay(125);
-			LCD_SetTextColor(LCD_COLOR_RED);
-			LCD_DrawFullCircle(x_mapped,y_mapped,4);
-			delay(125);
-			LCD_SetTextColor(LCD_COLOR_WHITE);
-			LCD_DrawFullCircle(x_mapped,y_mapped,4);
-			delay(125);
-			LCD_SetTextColor(LCD_COLOR_RED);
-			LCD_DrawFullCircle(x_mapped,y_mapped,4);
-			delay(125);
-			LCD_SetTextColor(LCD_COLOR_WHITE);
-			LCD_DrawFullCircle(x_mapped,y_mapped,4);
-			delay(125);
-			LCD_SetTextColor(LCD_COLOR_RED);
-			LCD_DrawFullCircle(x_mapped,y_mapped,4);
-			delay(125);
-			LCD_SetTextColor(LCD_COLOR_WHITE);
-			LCD_DrawFullCircle(x_mapped,y_mapped,4);
-			delay(125);
-		}
-		else{
-			LCD_Clear(LCD_COLOR_WHITE);
-			LCD_SetFont(&Font8x8);
-			LCD_DisplayStringLine(LINE(1), (uint8_t*)"Out of Bounds");
-		}
-		
-		osDelay(250);
+		osSignalWait(RX_PKT, osWaitForever);
+		GPIO_ToggleBits(GPIOD, GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
+		CC2500_Read((uint8_t*)packet, CC2500_FIFO_ADDR, 0x04);
+      rssi = CC2500_ComputeRssi((float)packet[2]);
+      printf("Data: 0x%04x\t", *((uint16_t*)(packet)));
+      printf("RSSI: %f\n", rssi);
+      // put device back to rx mode
+      CC2500_Strobe(CC2500_STROBE_SRX, 0x00);
 	}
 }
 
+void TxPacket(void const *argument) {
+   uint8_t buf[2], reg;
+   buf[0] = 0x2B;
+   buf[1] = 0x00;
+   while (1) {
+      GPIO_ToggleBits(GPIOD, GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
+      CC2500_TxPacket((uint8_t*)buf, 0x02);
+      printf("transmitted byte: 0x%02x\n", buf[1]);
+      osDelay(1000);
+      if (buf[1] == 0xFF)
+         buf[1] = 0x00;
+      else {
+         buf[1]++;
+      }
+   }
+}
 
-osThreadDef(locate, osPriorityNormal, 1, 0);
-
-// ID for theads
-
-osThreadId locate_thread;
+osThreadDef(RxPacket, osPriorityNormal, 1, 0);
+osThreadDef(TxPacket, osPriorityNormal, 1, 0);
 
 /*
  * main: initialize and start the system
  */
-
 int main (void) {
-  osKernelInitialize ();                    // initialize CMSIS-RTOS
-	
+  uint8_t buf;
+	osKernelInitialize ();                    // initialize CMSIS-RTOS
+  
   // initialize peripherals here
-	/* LCD initiatization */
-  LCD_Init();
-  
-  /* LCD Layer initiatization */
-  LCD_LayerInit();
-    
-  /* Enable the LTDC controler */
-  LTDC_Cmd(ENABLE);
-  
-  /* Set LCD foreground layer as the current layer */
-  LCD_SetLayer(LCD_FOREGROUND_LAYER);
-	
-	
+	Blinky_GPIO_Init();
+	wireless_init();
 	
   // create 'thread' functions that start executing,
   // example: tid_name = osThreadCreate (osThread(name), NULL);
+	//Rx_thread = osThreadCreate(osThread(RxPacket), NULL);
+    
+	uint8_t reg;
+
 	
-	/*******************************************************
-	         Uncomment the example you want to see
-	example_1a: Simple shape draw, fill and text display
-	example_1b: bitmap image display
-	example_1c: Simple animation
-	********************************************************/
+	CC2500_Read(&buf,CC2500_CFG_REG_FSCTRL1, 1);
+	printf("RSSI: 0x%02x\n", buf);
 	
-	//example_1a_thread = osThreadCreate(osThread(example_1a), NULL);
-	//example_1b_thread = osThreadCreate(osThread(example_1b), NULL);
-	locate_thread = osThreadCreate(osThread(locate), NULL);
+	CC2500_Read(&buf,CC2500_CFG_REG_FSCTRL0, 1);
+	printf("RSSI: 0x%02x\n", buf);
 	
-	osKernelStart ();                         // start thread execution 
+	CC2500_Read(&buf,CC2500_CFG_REG_FREQ2, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_FREQ1, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_FREQ0, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_MDMCFG4, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_MDMCFG3, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_MDMCFG2, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_MDMCFG1, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_MDMCFG0, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_CHANNR, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_DEVIATN, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_FRIEND1, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_FRIEND0, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_MCSM0, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_FOCCFG, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_BSCFG, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_AGCCTRL2, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_AGCCTRL1, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_AGCCTRL0, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_FSCAL3, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_FSCAL2, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_FSCAL1, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_FSCAL0, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,SMARTRF_SETTING_FSTEST, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_TEST2, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_TEST1, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_TEST0, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_FIFOTHR, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_IOCFG2, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_IOCFG0, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_PKTCTRL1, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_PKTCTRL0, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_ADDR, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+	CC2500_Read(&buf,CC2500_CFG_REG_PKTLEN, 1);
+	printf("RSSI: 0x%02x\n", buf);
+	
+   Tx_thread = osThreadCreate(osThread(TxPacket), NULL);
+   Rx_thread = osThreadCreate(osThread(RxPacket), NULL);
+	osKernelStart();
 }
 
+void wireless_init() {
+	CC2500_Init();
+	
+	GPIO_InitTypeDef GPIO_init_st;
+	NVIC_InitTypeDef NVIC_init_st;
+	EXTI_InitTypeDef EXTI_InitStructure;
+	
+	/* Enable SYSCFG clock */
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
+	
+	//Configure GPIO pin 0 in input mode
+	GPIO_init_st.GPIO_Mode = GPIO_Mode_IN;
+	GPIO_init_st.GPIO_Pin = CC2500_SPI_INT_PIN;
+	GPIO_init_st.GPIO_PuPd = GPIO_PuPd_DOWN;
+	GPIO_init_st.GPIO_Speed = GPIO_High_Speed;
+	GPIO_init_st.GPIO_OType = GPIO_OType_PP;
+	GPIO_Init(CC2500_SPI_INT_GPIO_PORT, &GPIO_init_st);
+	
+	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOB, EXTI_PinSource12);
+	EXTI_InitStructure.EXTI_Line = EXTI_Line12;
+	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
+	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+	EXTI_Init(&EXTI_InitStructure);
+	
+	// configure NVIC
+	NVIC_init_st.NVIC_IRQChannel = EXTI15_10_IRQn;
+	NVIC_init_st.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_init_st.NVIC_IRQChannelPreemptionPriority = 0x01;
+	NVIC_init_st.NVIC_IRQChannelSubPriority = 0x01;
+	NVIC_Init(&NVIC_init_st);
+	
+	NVIC_EnableIRQ(EXTI15_10_IRQn);
+}
 
+/**
+  * @brief  Interrupt Service Routine for EXTI12_IRQHandler
+  */
+void EXTI15_10_IRQHandler(void) {
+	if(EXTI_GetITStatus(EXTI_Line12) != RESET)
+    {
+			osSignalSet(Rx_thread, RX_PKT);
+		}	
+	// clear EXTI inruppt pending bit.
+	EXTI_ClearITPendingBit(EXTI_Line12);
+}

@@ -46,7 +46,7 @@
 //   <o> High-speed Internal Clock <1-999999999>
 #define RTE_HSI                         16000000
 //   <o> High-speed External Clock <1-999999999>
-#define RTE_HSE                         25000000
+#define RTE_HSE                         8000000
 //   <o> System Clock <1-999999999>
 #define RTE_SYSCLK                      168000000
 //   <o> AHB Clock    <1-999999999>
