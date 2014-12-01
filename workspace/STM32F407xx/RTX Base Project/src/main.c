@@ -39,6 +39,7 @@ void RxPacket(void const *argument){
    float rssi;
 	GPIO_ResetBits(GPIOD, GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
 	printf("Thread_started. waitig for sigal\n");
+	CC2500_Strobe(CC2500_STROBE_SRX, 0x00);
 	while(1){
 		osSignalWait(RX_PKT, osWaitForever);
 		GPIO_ToggleBits(GPIOD, GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
