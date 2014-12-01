@@ -3,7 +3,7 @@
  * Auto generated Run-Time-Environment Component Configuration File
  *      *** Do not modify ! ***
  *
- * Project: 'Main Board Project' 
+ * Project: 'Main Project' 
  * Target:  'Target 1' 
  */
 

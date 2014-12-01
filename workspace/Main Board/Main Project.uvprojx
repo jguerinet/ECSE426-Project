@@ -440,12 +440,17 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Gyroscope_Drivers</GroupName>
+          <GroupName>CC2500</GroupName>
           <Files>
             <File>
-              <FileName>stm32f429i_discovery_l3gd20.c</FileName>
+              <FileName>cc2500.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\inc\cc2500.h</FilePath>
+            </File>
+            <File>
+              <FileName>cc2500.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\src\stm32f429i_discovery_l3gd20.c</FilePath>
+              <FilePath>..\cc2500_driver\cc2500.c</FilePath>
             </File>
           </Files>
         </Group>
