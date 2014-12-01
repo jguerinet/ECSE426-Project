@@ -13,4 +13,3 @@ int fputc(int c, FILE *stream)
    return(ITM_SendChar(c));
 }
 
-
