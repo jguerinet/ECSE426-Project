@@ -3,7 +3,7 @@
  * Auto generated Run-Time-Environment Component Configuration File
  *      *** Do not modify ! ***
  *
- * Project: 'Aux Project' 
+ * Project: 'RTX Base Project' 
  * Target:  'Target 1' 
  */
 

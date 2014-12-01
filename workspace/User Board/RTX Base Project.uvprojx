@@ -45,7 +45,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\obj\</OutputDirectory>
-          <OutputName>User Project</OutputName>
+          <OutputName>RTX Base Project</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
@@ -364,7 +364,7 @@
               <MiscControls>--c99</MiscControls>
               <Define>HSE_VALUE=8000000 USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>.\src;.\inc;.\RTE\Device\STM32F407VG;.\RTE</IncludePath>
+              <IncludePath>.\src;.\inc;.\Accelerometer_Drivers\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -420,7 +420,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>CC2500_Drivers</GroupName>
+          <GroupName>CC2500</GroupName>
           <Files>
             <File>
               <FileName>cc2500.h</FileName>
