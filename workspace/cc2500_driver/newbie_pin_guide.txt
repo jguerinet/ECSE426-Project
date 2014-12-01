@@ -1,9 +1,0 @@
-This document provides pin assignment between Z430-2500T board and STM3204fxx.
-z430 pin ---> STM3204fxx pin
-P1  ---> GND
-P2  ---> 3V
-P13 ---> PB12
-P15 ---> PB14
-P16 ---> PB13
-P17 ---> PB11
-P18 ---> PB15
