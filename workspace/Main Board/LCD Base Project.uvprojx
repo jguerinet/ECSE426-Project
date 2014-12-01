@@ -450,6 +450,21 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>CC2500</GroupName>
+          <Files>
+            <File>
+              <FileName>cc2500.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\inc\cc2500.h</FilePath>
+            </File>
+            <File>
+              <FileName>cc2500.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\cc2500_driver\cc2500.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>::CMSIS</GroupName>
           <Files>
             <File>
