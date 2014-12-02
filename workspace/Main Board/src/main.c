@@ -189,6 +189,9 @@ void proximitySensor(void const* argument){
 	while(1){
 		//Wait until the display signal is set
 		osSignalWait(PROXIMITY_SENSOR_SIGNAL, osWaitForever);
+		
+		//Get the measured distance from the sensor
+		uint16_t distance = measureProximity(); 
 	}
 }
 
