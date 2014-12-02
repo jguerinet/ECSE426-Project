@@ -15,6 +15,10 @@
 //Display Update Signal 
 #define DISPLAY_SIGNAL (int32_t) 0x01
 
+/* METHODS FROM OTHER FILES */
+extern void initializeProximitySensor(void); 
+extern uint16_t measureProximity(void); 
+
 /* THREAD FUNCTIONS */
 //LCD
 void lcd(void const *argument);
@@ -69,6 +73,9 @@ int main (void) {
   LTDC_Cmd(ENABLE);
   //Set LCD foreground layer as the current layer
   LCD_SetLayer(LCD_FOREGROUND_LAYER);
+	
+	/* PROXIMITY SENSOR */
+	initializeProximitySensor(); 
 	
 	//Set up the Coordinates struct for the motion sensor 
 	//Initially everything is -1
