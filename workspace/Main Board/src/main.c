@@ -85,11 +85,10 @@ typedef struct{
 	float y;
 } Coordinates; 
 
-//This struct will contain addresses to other structs (to pass multiple structs to the LCD thread
-typedef struct{
-	Coordinates *sensorCoordinates; 
-	Coordinates *wirelessCoordinates; 
-} StructAddresses;
+//This will contain the coordinates measured by the proximity sensor 
+Coordinates sensorCoordinates = {-1, -1};
+//This will contain the coordinates measured by the boards
+Coordinates wirelessCoordinates = {-1, -1};
 
 //Helper method to simulate a delay
 static void delay(__IO uint32_t nCount){
@@ -117,27 +116,14 @@ int main (void) {
 	/* MOTOR */
 	initializeMotor(); 
 	
-	//Set up the Coordinates struct for the motion sensor 
-	//Initially everything is -1
-	Coordinates sensorCoordinates = {-1};
-	
-	//Set up the Coordinates struct for the wireless setuo 
-	//Initially everything is -1
-	Coordinates wirelessCoordinates = {-1};
-	
-	//Bundle these coordinates into 1 for the LCD thread
-	StructAddresses addresses = {}; 
-	addresses.sensorCoordinates = &sensorCoordinates; 
-	addresses.wirelessCoordinates = &wirelessCoordinates;
-	
 	/* Mutex Creations */
 	sensorCoordinatesId = osMutexCreate(osMutex(sensorCoordinates));
 	wirelessCoordinatesId = osMutexCreate(osMutex(wirelessCoordinates));
 	
 	/* Thread Creations */
-	lcd_thread = osThreadCreate(osThread(lcd), &addresses);
-	proximity_sensor_thread = osThreadCreate(osThread(proximitySensor), &sensorCoordinates); 
-	wireless_thread = osThreadCreate(osThread(wireless), &wirelessCoordinates); 
+	lcd_thread = osThreadCreate(osThread(lcd), NULL);
+	proximity_sensor_thread = osThreadCreate(osThread(proximitySensor), NULL); 
+	wireless_thread = osThreadCreate(osThread(wireless), NULL); 
 	
 	//Start thread execution
 	osKernelStart();                         
@@ -147,13 +133,6 @@ int main (void) {
 	* The LCD screen thread. 
   */
 void lcd(void const *arg){
-	//Get the addresses for the coordinates struct from the arg
-	StructAddresses *addresses = (StructAddresses *)arg; 
-	
-	//Get the coordinates structs from this
-	Coordinates *sensorCoordinates = addresses->sensorCoordinates;
-	Coordinates *wirelessCoordinates = addresses->wirelessCoordinates;
-	
 	//Clear the LCD
 	LCD_Clear(LCD_COLOR_WHITE);
 	LCD_SetFont(&Font8x8);
@@ -181,7 +160,7 @@ void lcd(void const *arg){
 	
 	//Set up the timer and start it
 	osTimerId displayTimerId = osTimerCreate(osTimer(displayTimer), osTimerPeriodic, NULL); 
-	osTimerStart(displayTimerId, 5); 
+	osTimerStart(displayTimerId, 30); 
 	
 	//Main Loop
 	while(1){
@@ -192,8 +171,8 @@ void lcd(void const *arg){
 		osMutexWait(sensorCoordinatesId, osWaitForever); 
 		
 		//Get the coordinates from this
-		x = sensorCoordinates->x;
-		y = sensorCoordinates->y;
+		x = sensorCoordinates.x;
+		y = sensorCoordinates.y;
 		
 		//Release the sensor coordinates mutex
 		osMutexRelease(sensorCoordinatesId); 
@@ -205,8 +184,8 @@ void lcd(void const *arg){
 			osMutexWait(wirelessCoordinatesId, osWaitForever); 
 			
 			//Get the wireless coordinates from this
-			x = wirelessCoordinates->x; 
-			y = wirelessCoordinates->y; 
+			x = wirelessCoordinates.x; 
+			y = wirelessCoordinates.y; 
 			
 			//Release the wireless coordinates mutex
 			osMutexRelease(wirelessCoordinatesId); 
@@ -223,11 +202,19 @@ void lcd(void const *arg){
 			LCD_DrawFullCircle(xMapped, yMapped, 4);
 		}
 		
+		//Check if there is a new position
+		if(x == -1 || y == -1){
+			//If there isn't one, continue
+			xMapped = -1; 
+			yMapped = -1;
+			continue; 
+		}
+		
 		//Calculate the new x and y positions to map
 		xMapped = (x / MAX_X) * 220;
 		yMapped = (y / MAX_Y) * 300;
 		
-		//Show the position on the screen if it is in bounds
+		//Show the position on the screen if it is in bounds and existant
 		if (xMapped < 220 & yMapped < 300){
 			LCD_SetTextColor(LCD_COLOR_RED);
 			LCD_DrawFullCircle(xMapped, yMapped, 4);
@@ -246,9 +233,6 @@ void lcd(void const *arg){
 	The proximity sensor thread
 */
 void proximitySensor(void const* argument){
-	//Get the sensor coordinates from the arguments
-	Coordinates *sensorCoordinates = (Coordinates *)argument;
-
 	//Set up the timer and start it
 	osTimerId proximitySensorTimerId = osTimerCreate(osTimer(proximitySensorTimer), osTimerPeriodic, NULL); 
 	osTimerStart(proximitySensorTimerId, 10); 
@@ -288,8 +272,8 @@ void proximitySensor(void const* argument){
 		osMutexWait(sensorCoordinatesId, osWaitForever); 
 		
 		//Set the x and y values
-		sensorCoordinates->x = x; 
-		sensorCoordinates->y = y; 
+		sensorCoordinates.x = -1; 
+		sensorCoordinates.y = -1; 
 		
 		//Release the mutex
 		osMutexRelease(sensorCoordinatesId); 
@@ -303,8 +287,7 @@ void proximitySensor(void const* argument){
 	The wireless thread
 */
 void wireless(void const* arg){
-	//Get the wireless coordinates from the arguments
-	Coordinates *wirelessCoordinates = (Coordinates *)arg;
+	//TODO
 }
 
 /**

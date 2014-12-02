@@ -13,7 +13,7 @@ P18 ---> PB15
 - Between Motor and Main Board
 Red Wire -> 3V
 Black Wire -> GND
-Yellow Wire -> PA5
+Yellow Wire -> PA10
 
 - Between Proximity Sensor and Main Board
 Red Wire -> 3V
