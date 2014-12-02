@@ -14,6 +14,10 @@
 
 #define PI 3.14159265
 
+/* AREA SIZE (cm) */
+#define MAX_X 160
+#define MAX_Y	160
+
 /* SIGNALS */
 //Display Update Signal 
 #define DISPLAY_SIGNAL (int32_t) 0x01
@@ -170,6 +174,10 @@ void lcd(void const *arg){
 	double xMapped = -1; 
 	double yMapped = -1;
 	
+	//This will keep track of the received x and y coordinates
+	double x = -1; 
+	double y = -1; 
+	
 	//Set up the timer and start it
 	osTimerId displayTimerId = osTimerCreate(osTimer(displayTimer), osTimerPeriodic, NULL); 
 	osTimerStart(displayTimerId, 5); 
@@ -183,11 +191,30 @@ void lcd(void const *arg){
 		osMutexWait(sensorCoordinatesId, osWaitForever); 
 		
 		//Get the coordinates from this
-		double x = sensorCoordinates->x;
-		double y = sensorCoordinates->y;
+		x = sensorCoordinates->x;
+		y = sensorCoordinates->y;
 		
 		//Release the sensor coordinates mutex
 		osMutexRelease(sensorCoordinatesId); 
+		
+		//If the coordinates are -1, then the sensor is not picking up on anything
+		//Therefore use the wireless coordinates
+		if(x == -1){
+			//Get the wireless coordinates mutex
+			osMutexWait(wirelessCoordinatesId, osWaitForever); 
+			
+			//Get the wireless coordinates from this
+			x = wirelessCoordinates->x; 
+			y = wirelessCoordinates->y; 
+			
+			//Release the wireless coordinates mutex
+			osMutexRelease(wirelessCoordinatesId); 
+		}
+		else{
+			//The sensor coordinates assume that the center is x = 0, 
+			//	so adjust it to have only x positive values
+			x += MAX_X / 2;
+		}
 		
 		//If there was a previous position, hide it
 		if(xMapped != -1){
@@ -196,8 +223,8 @@ void lcd(void const *arg){
 		}
 		
 		//Calculate the new x and y positions to map
-		xMapped = (x+(10/44))*44;
-		yMapped = (y+(10/60))*60;
+		xMapped = (x / MAX_X) * 220;
+		yMapped = (y / MAX_Y) * 300;
 		
 		//Show the position on the screen if it is in bounds
 		if (xMapped < 220 & yMapped < 300){
