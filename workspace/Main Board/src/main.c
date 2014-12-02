@@ -14,6 +14,8 @@
 /* SIGNALS */
 //Display Update Signal 
 #define DISPLAY_SIGNAL (int32_t) 0x01
+//Proximity Sensor Signal
+#define PROXIMITY_SENSOR_SIGNAL (int32_t) 0x02
 
 /* METHODS FROM OTHER FILES */
 extern void initializeProximitySensor(void); 
@@ -21,9 +23,9 @@ extern uint16_t measureProximity(void);
 
 /* THREAD FUNCTIONS */
 //LCD
-void lcd(void const *argument);
+void lcd(void const *arg);
 //Proximity Sensor
-void proximitySensor(void const *argument); 
+void proximitySensor(void const *arg); 
 
 /* THREAD DEFINITIONS */
 //LCD
@@ -44,9 +46,17 @@ osMutexDef(sensorCoordinates);
 /* MUTEX IDs */
 osMutexId sensorCoordinatesId;
 
-//This for the timer to update the display 
+/* TIMER FUNCTIONS */
+//Display
 void displayTimerCallback(void const* arg);
+//Proximity Sensor
+void proximitySensorTimerCallback(void const* arg);
+
+/* TIMERS */
+//Display
 osTimerDef(displayTimer, displayTimerCallback); 
+//Proximity Sensor
+osTimerDef(proximitySensorTimer, proximitySensorTimerCallback); 
 
 //This struct will contain x and y coordinates measured
 typedef struct{
@@ -169,7 +179,17 @@ void lcd(void const *argument){
 */
 void proximitySensor(void const* argument){
 	//Get the sensor coordinates from the arguments
-	Coordinates *sensorCoordinates = (Coordinates *)argument; 
+	Coordinates *sensorCoordinates = (Coordinates *)argument;
+
+	//Set up the timer and start it
+	osTimerId proximitySensorTimerId = osTimerCreate(osTimer(proximitySensorTimer), osTimerPeriodic, NULL); 
+	osTimerStart(proximitySensorTimerId, 10); 	
+	
+	//Main Loop
+	while(1){
+		//Wait until the display signal is set
+		osSignalWait(PROXIMITY_SENSOR_SIGNAL, osWaitForever);
+	}
 }
 
 /**
@@ -178,4 +198,12 @@ void proximitySensor(void const* argument){
 void displayTimerCallback(void const* argument){
 	//Send a signal to the lcd thread
 	osSignalSet(lcd_thread, DISPLAY_SIGNAL); 
+}
+
+/**
+	Handles the timer callback for retrieving values from the proximity sensor
+*/
+void proximitySensorTimerCallback(void const* arg){
+	//Send a signal to the sensor thread
+	osSignalSet(proximity_sensor_thread, PROXIMITY_SENSOR_SIGNAL); 
 }
