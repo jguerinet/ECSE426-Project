@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 #include "stm32f4xx.h"
 #include "stm32f4xx_conf.h"
 
@@ -31,17 +32,11 @@ void initializeProximitySensor() {
 	
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 
-	//we want pin A1
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
+	//we want pin A9
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
 	
 	//Initialize the LEDs
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
-	
-	//We need to change the mappings of the pins to the AF as well
-	//GPIO_PinAFConfig(GPIOD, GPIO_PinSource12, GPIO_AF_TIM4); 
-	//GPIO_PinAFConfig(GPIOD, GPIO_PinSource13, GPIO_AF_TIM4); 
-	//GPIO_PinAFConfig(GPIOD, GPIO_PinSource14, GPIO_AF_TIM4); 
-	//GPIO_PinAFConfig(GPIOD, GPIO_PinSource15, GPIO_AF_TIM4); 
 }
 
 /* Initializes the ADC1 */
@@ -84,6 +79,20 @@ uint16_t measureProximity(void){
 	@return The distance measured
 */
 uint8_t getSensorDistance(void){
-	//TODO
-	return 0; 
+	//Get the voltage
+	uint16_t voltage = measureProximity(); 
+	
+	float a = 0.1999029;
+	float b = -49.5775589;
+	float c = 3612.8375967 - voltage;
+	
+	float root1 = (-1*b + sqrt(pow(b,2) -4*a*c))/(2*a);
+	float root2 = (-1*b - sqrt(pow(b,2) -4*a*c))/(2*a);
+	
+	if(root1 < root2){
+		return root1;
+	}else{
+		return root2;		
+	}
+
 }

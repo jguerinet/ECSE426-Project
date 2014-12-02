@@ -30,6 +30,7 @@ extern void initializeProximitySensor(void);
 extern uint8_t getSensorDistance(void); 
 //Motor
 extern void initializeMotor(void);
+extern void updateMotor(void); 
 extern uint8_t getMotorAngle(void); 
 
 /* THREAD FUNCTIONS */
@@ -292,6 +293,9 @@ void proximitySensor(void const* argument){
 		
 		//Release the mutex
 		osMutexRelease(sensorCoordinatesId); 
+		
+		//Update the motor angle
+		updateMotor(); 
 	}
 }
 

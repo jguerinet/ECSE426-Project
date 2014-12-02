@@ -14,3 +14,8 @@ P18 ---> PB15
 Red Wire -> 3V
 Black Wire -> GND
 Yellow Wire -> PA5
+
+- Between Proximity Sensor and Main Board
+Red Wire -> 3V
+Black Wire -> GND
+Yellow Wire -> PA9

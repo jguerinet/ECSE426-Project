@@ -1,8 +1,17 @@
 #include <stdio.h>
 #include "stm32f4xx.h"
-#include "stm32f4xx_conf.h" 
+#include "stm32f4xx_conf.h"
 
-void initializeTIM4(); 
+#define MIN_PERIOD_LENGTH 0
+#define MAX_PERIOD_LENGTH 1000
+#define MAX_DUTY_CYCLE 		4
+
+void initializeTIM4();
+
+uint8_t dutyCycle; 
+uint16_t periodLength;
+//Boolean to keep track of whether we are increasing or decreasing the angle
+int increasingAngle; 
 
 /* Initializes the Servo Motor */ 
 void initializeMotor(void) {
@@ -19,6 +28,15 @@ void initializeMotor(void) {
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
 	
 	GPIO_Init(GPIOD, &GPIO_InitStructure);
+	
+	//Set the duty cycle to 0
+	dutyCycle = 0; 
+	
+	//Set the period length to the min
+	periodLength = MIN_PERIOD_LENGTH;
+	
+	//Initially increasing the angle
+	increasingAngle = 1; 
 	
 	//Initialize the timer
 	initializeTIM4(); 
@@ -66,18 +84,46 @@ void initializeTIM4(void){
 }
 
 /**
-	Sets the PWM length for the motor
-	@param pulseLength The length of the PWM 
+	Updates the motor angle
 */
-void setPWMLength(uint16_t pulseLength){
-	TIM_SetCompare1(TIM4, pulseLength); 
+void updateMotor(void){
+	//Increment the duty cycle
+	dutyCycle ++; 
+	
+	//Check if we need to increment the period length 
+	if(dutyCycle == MAX_DUTY_CYCLE){
+		//Reset the duty Cycle to 0 
+		dutyCycle = 0; 
+		
+		//Check if we have reached one of the ends
+		if(periodLength == MAX_PERIOD_LENGTH){
+				//Max period length achieved, so switch to decreasing angle
+				increasingAngle = 0; 
+		}
+		else if(periodLength == MIN_PERIOD_LENGTH){
+				//Min period length achieved, so switch to increasing angle
+				increasingAngle = 1; 
+		}
+		
+		//If we are increasing the angle, increment the period
+		if(increasingAngle){
+			periodLength ++; 
+		}
+		//If we are decreasing the angle, decrement the period
+		else{
+			periodLength --; 
+		}
+		
+		//Set the new PWM length 
+		TIM_SetCompare1(TIM4, periodLength); 
+	}
 }
 
 /**
 	Reads the angle of the motor
 	@return The motor angle
 */
-uint8_t getMotorAngle(){
+uint8_t getMotorAngle(void){
 	//TODO
 	return 0; 
 }
