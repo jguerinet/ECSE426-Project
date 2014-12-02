@@ -1,10 +1,6 @@
- /*----------------------------------------------------------------------------
- * CMSIS-RTOS 'main' function template
- *---------------------------------------------------------------------------*/
-
 #define osObjectsPublic                     // define objects in main module
 #include "osObjects.h"                      // RTOS object definitions
-#include "stm32f4xx.h"                  // Device header
+#include "stm32f4xx.h"                  		// Device header
 
 #include "stm32f4xx_conf.h"
 #include "stm32f429i_discovery.h"
@@ -21,15 +17,21 @@
 
 /* THREAD FUNCTIONS */
 //LCD
-void lcd(void const *arguments);
+void lcd(void const *argument);
+//Proximity Sensor
+void proximitySensor(void const *argument); 
 
 /* THREAD DEFINITIONS */
 //LCD
 osThreadDef(lcd, osPriorityNormal, 1, 0);
+//Proximity Sensor
+osThreadDef(proximitySensor, osPriorityNormal, 1, 0); 
 
 /* THREAD IDs */
 //LCD
 osThreadId lcd_thread;
+//Proximity Sensor
+osThreadId proximity_sensor_thread; 
 
 /* MUTEX DEFINTIIONS */
 //Position measured by the sensor
@@ -77,6 +79,7 @@ int main (void) {
 	
 	/* Thread Creations */
 	lcd_thread = osThreadCreate(osThread(lcd), &sensorCoordinates);
+	proximity_sensor_thread = osThreadCreate(osThread(proximitySensor), &sensorCoordinates); 
 	
 	//Start thread execution
 	osKernelStart();                         
@@ -153,6 +156,15 @@ void lcd(void const *argument){
 		}
 	}
 }
+
+/**
+	The proximity sensor thread
+*/
+void proximitySensor(void const* argument){
+	//Get the sensor coordinates from the arguments
+	Coordinates *sensorCoordinates = (Coordinates *)argument; 
+}
+
 /**
 	Handles the timer callback for updating the display
 */
