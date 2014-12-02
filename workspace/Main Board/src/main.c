@@ -20,6 +20,7 @@
 /* METHODS FROM OTHER FILES */
 extern void initializeProximitySensor(void); 
 extern uint16_t measureProximity(void); 
+extern void initializeMotor(void); 
 
 /* THREAD FUNCTIONS */
 //LCD
@@ -86,6 +87,9 @@ int main (void) {
 	
 	/* PROXIMITY SENSOR */
 	initializeProximitySensor(); 
+	
+	/* MOTOR */
+	initializeMotor(); 
 	
 	//Set up the Coordinates struct for the motion sensor 
 	//Initially everything is -1
@@ -183,7 +187,10 @@ void proximitySensor(void const* argument){
 
 	//Set up the timer and start it
 	osTimerId proximitySensorTimerId = osTimerCreate(osTimer(proximitySensorTimer), osTimerPeriodic, NULL); 
-	osTimerStart(proximitySensorTimerId, 10); 	
+	osTimerStart(proximitySensorTimerId, 10); 
+
+	//Start the motor timer 
+	TIM_Cmd(TIM4, ENABLE); 
 	
 	//Main Loop
 	while(1){

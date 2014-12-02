@@ -1,12 +1,8 @@
 #include <stdio.h>
 #include "stm32f4xx.h"
-#include "stm32f4xx_conf.h"
+#include "stm32f4xx_conf.h" 
 
-#define MOTOR GPIO_Pin_11 
-
-extern void updateMotor(float temperature);
-
-int length; 
+void initializeTIM4(); 
 
 /* Initializes the Servo Motor */ 
 void initializeMotor(void) {
@@ -16,35 +12,21 @@ void initializeMotor(void) {
 	//Pass in the struct
 	GPIO_StructInit(&GPIO_InitStructure);
 	
-	//Set the gpio speed to 50MHz
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-	//D11 is a free pin
-	GPIO_InitStructure.GPIO_Pin = MOTOR;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
 	
 	GPIO_Init(GPIOD, &GPIO_InitStructure);
+	
+	//Initialize the timer
+	initializeTIM4(); 
 }
 
-/* Update the motor position with a given temperature */
-void updateMotor(float temperature){	
-	//Calculate the length that we need to keep the bit high
-	length = temperature * 850 - 4000;
-
-	//Turn on the motor
-	GPIO_SetBits(GPIOD, MOTOR);
-	
-	int count = 0; 
-	while(count++ < length);
-	
-	//Turn off the motor
-	GPIO_ResetBits(GPIOD, MOTOR);
-}
-
+/* Initializes the timer for the motor */
 void initializeTIM4(void){
-	//We need to initialize TIM4 (the timer connected to the 4 LEDs, page 27, Discovery Board Manual)
-	//Enable it on the APB1 (page 12, Discovery Board Manual)
+	//Enable it on the APB1 (page 14, User Manual)
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE); 
 	
 	//The Timer Initializer
@@ -77,16 +59,10 @@ void initializeTIM4(void){
 	//Use Active High so that it starts at 1 and goes to 0 after, for the PWM
   TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
   
-	//Configure all 4 channels of PWM1 (Each channel is connected an LED
+	//Configure channel 1
 	TIM_OC1Init(TIM4, &TIM_OCInitStructure);
-	TIM_OC2Init(TIM4, &TIM_OCInitStructure);
-	TIM_OC3Init(TIM4, &TIM_OCInitStructure);
-	TIM_OC4Init(TIM4, &TIM_OCInitStructure);
 	
-	TIM_OC3PreloadConfig(TIM4, TIM_OCPreload_Enable);
-	
-	//Start the timer 
-	TIM_Cmd(TIM4, ENABLE); 
+	TIM_OC1PreloadConfig(TIM4, TIM_OCPreload_Enable);
 }
 
 /**
@@ -94,5 +70,5 @@ void initializeTIM4(void){
 	@param pulseLength The length of the PWM 
 */
 void setPWMLength(uint16_t pulseLength){
-	TIM_SetCompare3(TIM4, pulseLength); 
+	TIM_SetCompare1(TIM4, pulseLength); 
 }
