@@ -10,6 +10,9 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
+
+#define PI 3.14159265
 
 /* SIGNALS */
 //Display Update Signal 
@@ -18,9 +21,12 @@
 #define PROXIMITY_SENSOR_SIGNAL (int32_t) 0x02
 
 /* METHODS FROM OTHER FILES */
+//Proximity Sensor
 extern void initializeProximitySensor(void); 
-extern uint16_t measureProximity(void); 
-extern void initializeMotor(void); 
+extern uint8_t getSensorDistance(void); 
+//Motor
+extern void initializeMotor(void);
+extern uint8_t getMotorAngle(void); 
 
 /* THREAD FUNCTIONS */
 //LCD
@@ -222,13 +228,43 @@ void proximitySensor(void const* argument){
 	//Start the motor timer 
 	TIM_Cmd(TIM4, ENABLE); 
 	
+	//These will keep track of the x and y coordinates for the measured person
+	float x = -1; 
+	float y = -1; 
+	
 	//Main Loop
 	while(1){
 		//Wait until the display signal is set
 		osSignalWait(PROXIMITY_SENSOR_SIGNAL, osWaitForever);
 		
 		//Get the measured distance from the sensor
-		uint16_t distance = measureProximity(); 
+		uint8_t distance = getSensorDistance(); 
+		
+		//If the distance was 0, just set the x and y coordinates to -1
+		if(distance == 0){
+			x = -1; 
+			y = -1; 
+		}
+		else{
+			//Get the angle from the motor
+			uint8_t angle = getMotorAngle(); 
+			
+			//From this, calculate x and y 
+			//X is cos(angle) * distance, with angle converted to radians
+			x = cos(angle * PI / 180.0) * distance;
+			//Y is sin(angle) * distance, with angle converted to radians
+			y = sin(angle * PI / 180.0) * distance;
+		}
+		
+		//Get the mutex 
+		osMutexWait(sensorCoordinatesId, osWaitForever); 
+		
+		//Set the x and y values
+		sensorCoordinates->x = x; 
+		sensorCoordinates->y = y; 
+		
+		//Release the mutex
+		osMutexRelease(sensorCoordinatesId); 
 	}
 }
 

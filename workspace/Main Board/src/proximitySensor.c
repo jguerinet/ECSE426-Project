@@ -78,3 +78,12 @@ uint16_t measureProximity(void){
 	//Return the result
 	return value;	
 }
+
+/**
+	Returns the distance measured by the proximity sensor in cm
+	@return The distance measured
+*/
+uint8_t getSensorDistance(void){
+	//TODO
+	return 0; 
+}

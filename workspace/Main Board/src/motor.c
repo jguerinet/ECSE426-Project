@@ -72,3 +72,12 @@ void initializeTIM4(void){
 void setPWMLength(uint16_t pulseLength){
 	TIM_SetCompare1(TIM4, pulseLength); 
 }
+
+/**
+	Reads the angle of the motor
+	@return The motor angle
+*/
+uint8_t getMotorAngle(){
+	//TODO
+	return 0; 
+}
