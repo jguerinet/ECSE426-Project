@@ -3,12 +3,12 @@
 #include "stm32f4xx_conf.h"
 
 #define MIN_PERIOD_LENGTH 0
-#define MAX_PERIOD_LENGTH 1000
-#define MAX_DUTY_CYCLE 		4
+#define MAX_PERIOD_LENGTH 200
+#define MAX_DUTY_CYCLE 		8
 
-void initializeTIM4();
+void initializeTIM4(void);
 
-uint8_t dutyCycle; 
+uint16_t dutyCycle; 
 uint16_t periodLength;
 //Boolean to keep track of whether we are increasing or decreasing the angle
 int increasingAngle; 
@@ -22,12 +22,14 @@ void initializeMotor(void) {
 	GPIO_StructInit(&GPIO_InitStructure);
 	
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
 	
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
+	
+	GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_TIM5); 
 	
 	//Set the duty cycle to 0
 	dutyCycle = 0; 
@@ -45,7 +47,7 @@ void initializeMotor(void) {
 /* Initializes the timer for the motor */
 void initializeTIM4(void){
 	//Enable it on the APB1 (page 14, User Manual)
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE); 
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM5, ENABLE); 
 	
 	//The Timer Initializer
 	TIM_TimeBaseInitTypeDef timer_initStructure;
@@ -56,14 +58,14 @@ void initializeTIM4(void){
 	//Counting upwards
 	timer_initStructure.TIM_CounterMode = TIM_CounterMode_Up;
 	//Period set to 1000 so it's easier to control the PWM 
-	timer_initStructure.TIM_Period = 1000 -1; 
+	timer_initStructure.TIM_Period = 180-1; 
 	//No Clock Division (0)
 	timer_initStructure.TIM_ClockDivision = TIM_CKD_DIV1;
 	//No repetition counter (not valid for TIM4)
 	timer_initStructure.TIM_RepetitionCounter = 0; 
 	
 	//Initialize TIM4
-	TIM_TimeBaseInit(TIM4, &timer_initStructure); 
+	TIM_TimeBaseInit(TIM5, &timer_initStructure); 
 	
 	//PWM Setup
 	//The initializer structure
@@ -78,9 +80,12 @@ void initializeTIM4(void){
   TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
   
 	//Configure channel 1
-	TIM_OC1Init(TIM4, &TIM_OCInitStructure);
+	TIM_OC4Init(TIM5, &TIM_OCInitStructure);
 	
-	TIM_OC1PreloadConfig(TIM4, TIM_OCPreload_Enable);
+	TIM_OC4PreloadConfig(TIM5, TIM_OCPreload_Enable);
+	
+	//Start the motor timer 
+	TIM_Cmd(TIM5, ENABLE); 
 }
 
 /**
@@ -107,15 +112,17 @@ void updateMotor(void){
 		
 		//If we are increasing the angle, increment the period
 		if(increasingAngle){
-			periodLength ++; 
+			periodLength += 1; 
 		}
 		//If we are decreasing the angle, decrement the period
 		else{
-			periodLength --; 
+			periodLength -= 1; 
 		}
 		
+		printf("Period Length: %d\n", periodLength); 
+		
 		//Set the new PWM length 
-		TIM_SetCompare1(TIM4, periodLength); 
+		TIM_SetCompare4(TIM5, periodLength); 
 	}
 }
 

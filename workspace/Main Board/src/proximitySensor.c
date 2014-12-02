@@ -18,9 +18,6 @@ void initializeProximitySensor() {
 	//Select the ADC_Channel_1 and set sample time
 	ADC_RegularChannelConfig(ADC1, ADC_Channel_1, 1, ADC_SampleTime_480Cycles);
 	
-	//Initialize GPIO A Board
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
-	
 	//Define the initializer struct 
 	GPIO_InitTypeDef GPIO_InitStructure;
 	

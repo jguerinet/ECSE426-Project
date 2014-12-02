@@ -45,7 +45,7 @@ void wireless(void const *arg);
 //LCD
 osThreadDef(lcd, osPriorityNormal, 1, 0);
 //Proximity Sensor
-osThreadDef(proximitySensor, osPriorityNormal, 1, 0); 
+osThreadDef(proximitySensor, osPriorityHigh, 1, 0); 
 //Wireless
 osThreadDef(wireless, osPriorityNormal, 1, 0);
 
@@ -110,6 +110,10 @@ int main (void) {
   //Set LCD foreground layer as the current layer
   LCD_SetLayer(LCD_FOREGROUND_LAYER);
 	
+	//Initialize GPIO A Board
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
+	
 	/* PROXIMITY SENSOR */
 	initializeProximitySensor(); 
 	
@@ -126,7 +130,9 @@ int main (void) {
 	wireless_thread = osThreadCreate(osThread(wireless), NULL); 
 	
 	//Start thread execution
-	osKernelStart();                         
+	osKernelStart();    
+
+	osDelay(osWaitForever);
 }
 
 /**
@@ -235,10 +241,7 @@ void lcd(void const *arg){
 void proximitySensor(void const* argument){
 	//Set up the timer and start it
 	osTimerId proximitySensorTimerId = osTimerCreate(osTimer(proximitySensorTimer), osTimerPeriodic, NULL); 
-	osTimerStart(proximitySensorTimerId, 10); 
-
-	//Start the motor timer 
-	TIM_Cmd(TIM4, ENABLE); 
+	osTimerStart(proximitySensorTimerId, 20); 
 	
 	//These will keep track of the x and y coordinates for the measured person
 	float x = -1; 
