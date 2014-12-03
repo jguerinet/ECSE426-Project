@@ -119,8 +119,6 @@ void updateMotor(void){
 			periodLength -= 1; 
 		}
 		
-		printf("Period Length: %d\n", periodLength); 
-		
 		//Set the new PWM length 
 		TIM_SetCompare4(TIM5, periodLength); 
 	}
@@ -132,5 +130,5 @@ void updateMotor(void){
 */
 uint8_t getMotorAngle(void){
 	//TODO
-	return 0; 
+	return 180; 
 }

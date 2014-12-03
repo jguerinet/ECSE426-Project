@@ -30,7 +30,7 @@ void initializeProximitySensor() {
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 
 	//we want pin A9
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;
 	
 	//Initialize the LEDs
 	GPIO_Init(GPIOA, &GPIO_InitStructure);

@@ -15,8 +15,8 @@
 #define PI 3.14159265
 
 /* AREA SIZE (cm) */
-#define MAX_X 160
-#define MAX_Y	160
+#define MAX_X 400
+#define MAX_Y	400
 
 /* SIGNALS */
 //Display Update Signal 
@@ -157,16 +157,16 @@ void lcd(void const *arg){
 	}
 	
 	//This will keep track of the x and y coordinates that are currently mapped 
-	double xMapped = -1; 
-	double yMapped = -1;
+	int16_t xMapped = -1; 
+	int16_t yMapped = -1;
 	
 	//This will keep track of the received x and y coordinates
-	double x = -1; 
-	double y = -1; 
+	int16_t x = -1; 
+	int16_t y = -1; 
 	
 	//Set up the timer and start it
 	osTimerId displayTimerId = osTimerCreate(osTimer(displayTimer), osTimerPeriodic, NULL); 
-	osTimerStart(displayTimerId, 30); 
+	osTimerStart(displayTimerId, 200); 
 	
 	//Main Loop
 	while(1){
@@ -217,17 +217,18 @@ void lcd(void const *arg){
 		}
 		
 		//Calculate the new x and y positions to map
-		xMapped = (x / MAX_X) * 220;
-		yMapped = (y / MAX_Y) * 300;
+		xMapped = (x * 220 / MAX_X) + 10;
+		yMapped = (y * 300/ MAX_Y) + 10;
 		
 		//Show the position on the screen if it is in bounds and existant
-		if (xMapped < 220 & yMapped < 300){
+		if (xMapped > 9 && xMapped < 231 & yMapped > 9 && yMapped < 311){
 			LCD_SetTextColor(LCD_COLOR_RED);
 			LCD_DrawFullCircle(xMapped, yMapped, 4);
+			delay(125); 
 		}
 		else{
 			//Printf error message
-			printf("Out of Bounds: %f, %f", xMapped, yMapped);
+			printf("Out of Bounds: %d, %d\n", xMapped, yMapped);
 			//Set the mapped values to -1
 			xMapped = -1; 
 			yMapped = -1; 
@@ -255,6 +256,8 @@ void proximitySensor(void const* argument){
 		//Get the measured distance from the sensor
 		uint8_t distance = getSensorDistance(); 
 		
+		printf("Distance: %d\n", distance); 
+		
 		//If the distance was 0, just set the x and y coordinates to -1
 		if(distance == 0){
 			x = -1; 
@@ -269,14 +272,15 @@ void proximitySensor(void const* argument){
 			x = cos(angle * PI / 180.0) * distance;
 			//Y is sin(angle) * distance, with angle converted to radians
 			y = sin(angle * PI / 180.0) * distance;
+			
 		}
 		
 		//Get the mutex 
 		osMutexWait(sensorCoordinatesId, osWaitForever); 
 		
 		//Set the x and y values
-		sensorCoordinates.x = -1; 
-		sensorCoordinates.y = -1; 
+		sensorCoordinates.x = x; 
+		sensorCoordinates.y = y; 
 		
 		//Release the mutex
 		osMutexRelease(sensorCoordinatesId); 
