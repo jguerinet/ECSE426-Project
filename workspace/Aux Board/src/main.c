@@ -9,11 +9,9 @@
 #include <stdio.h>
 #include "cc2500.h"
 
-
 #define RX_PKT 0x01
 
 void wireless_init(void);
-
 
 // ID for thread
 osThreadId	Rx_thread;
@@ -34,168 +32,61 @@ void Blinky_GPIO_Init(void){
 }
 
 void RxPacket(void const *argument){
-	uint8_t buf;
-	uint8_t packet[4];
-   float rssi;
-	GPIO_ResetBits(GPIOD, GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
-	printf("Thread_started. waitig for sigal\n");
+	uint8_t mode_filter, transmit_mode;
+   uint8_t buf, packet[SMARTRF_SETTING_PKTLEN + 2];
+	
+   GPIO_ResetBits(GPIOD, GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
+   mode_filter = 0x70;
+   transmit_mode = 0x10;
+	printf("Thread_started. waitig for signal\n");
+   // put reciever in RX mode
 	CC2500_Strobe(CC2500_STROBE_SRX, 0x00);
+   
 	while(1){
 		osSignalWait(RX_PKT, osWaitForever);
+      //turn on LED on packet RX
 		GPIO_ToggleBits(GPIOD, GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
-		CC2500_Read((uint8_t*)packet, CC2500_FIFO_ADDR, 0x04);
-      rssi = CC2500_ComputeRssi((float)packet[2]);
-      printf("Data: 0x%04x\t", *((uint16_t*)(packet)));
-      printf("RSSI: %f\n", rssi);
+      
+		CC2500_Read((uint8_t*)packet, CC2500_FIFO_ADDR, SMARTRF_SETTING_PKTLEN + 2);
+      // put the measured RSSI in  byte 3 for main board
+      packet[2] = packet[3];
+      printf("Packet received from user beacon\n");
+      printf("SRC: 0x%02x\t\t", packet[0]);
+      printf("SEQ: 0x%02x\t\t", packet[1]);
+      printf("RAW_RSSI: 0x%02x\t\t", packet[2]);
+      
+      // change the source address on the packet
+      packet[0] = SMARTRF_SETTING_ADDR;
+      // transmit this packet for main board
+      CC2500_TxPacket((uint8_t*)packet, SMARTRF_SETTING_PKTLEN);
+      
+      // wait for the transmission to finish
+      
+      buf = CC2500_Strobe(CC2500_STROBE_SNOP, 0x01);
+      while ((mode_filter & buf) != 0x20)
+         buf = CC2500_Strobe(CC2500_STROBE_SNOP, 0x01);
+      // turn off LED on successful Tx
+      GPIO_ToggleBits(GPIOD, GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
+      
       // put device back to rx mode
       CC2500_Strobe(CC2500_STROBE_SRX, 0x00);
 	}
 }
 
-void TxPacket(void const *argument) {
-   uint8_t buf[2], reg;
-   buf[0] = 0x2B;
-   buf[1] = 0x00;
-   while (1) {
-      GPIO_ToggleBits(GPIOD, GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
-      CC2500_TxPacket((uint8_t*)buf, 0x02);
-      printf("transmitted byte: 0x%02x\n", buf[1]);
-      osDelay(1000);
-      if (buf[1] == 0xFF)
-         buf[1] = 0x00;
-      else {
-         buf[1]++;
-      }
-   }
-}
 
 osThreadDef(RxPacket, osPriorityNormal, 1, 0);
-osThreadDef(TxPacket, osPriorityNormal, 1, 0);
 
 /*
  * main: initialize and start the system
  */
 int main (void) {
-  uint8_t buf;
-	osKernelInitialize ();                    // initialize CMSIS-RTOS
+  uint8_t buf, reg;
+  osKernelInitialize ();                    // initialize CMSIS-RTOS
   
   // initialize peripherals here
-	Blinky_GPIO_Init();
-	wireless_init();
-	
-  // create 'thread' functions that start executing,
-  // example: tid_name = osThreadCreate (osThread(name), NULL);
-	//Rx_thread = osThreadCreate(osThread(RxPacket), NULL);
-    
-	uint8_t reg;
+  Blinky_GPIO_Init();
+  wireless_init();
 
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FSCTRL1, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FSCTRL0, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FREQ2, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FREQ1, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FREQ0, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_MDMCFG4, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_MDMCFG3, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_MDMCFG2, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_MDMCFG1, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_MDMCFG0, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_CHANNR, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_DEVIATN, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FRIEND1, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FRIEND0, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_MCSM0, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FOCCFG, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_BSCFG, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_AGCCTRL2, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_AGCCTRL1, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_AGCCTRL0, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FSCAL3, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FSCAL2, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FSCAL1, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FSCAL0, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,SMARTRF_SETTING_FSTEST, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_TEST2, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_TEST1, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_TEST0, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FIFOTHR, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_IOCFG2, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_IOCFG0, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_PKTCTRL1, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_PKTCTRL0, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_ADDR, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_PKTLEN, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-   Tx_thread = osThreadCreate(osThread(TxPacket), NULL);
    Rx_thread = osThreadCreate(osThread(RxPacket), NULL);
 	osKernelStart();
 }
@@ -218,21 +109,21 @@ void wireless_init() {
 	GPIO_init_st.GPIO_OType = GPIO_OType_PP;
 	GPIO_Init(CC2500_SPI_INT_GPIO_PORT, &GPIO_init_st);
 	
-	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOB, EXTI_PinSource12);
-	EXTI_InitStructure.EXTI_Line = EXTI_Line12;
+	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOB, CC2500_SPI_INT_EXTI_PIN_SOURCE);
+	EXTI_InitStructure.EXTI_Line = CC2500_SPI_INT_EXTI_LINE;
 	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
 	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
 	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
 	EXTI_Init(&EXTI_InitStructure);
 	
 	// configure NVIC
-	NVIC_init_st.NVIC_IRQChannel = EXTI15_10_IRQn;
+	NVIC_init_st.NVIC_IRQChannel = CC2500_SPI_INT_EXTI_IRQn;
 	NVIC_init_st.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_init_st.NVIC_IRQChannelPreemptionPriority = 0x01;
 	NVIC_init_st.NVIC_IRQChannelSubPriority = 0x01;
 	NVIC_Init(&NVIC_init_st);
 	
-	NVIC_EnableIRQ(EXTI15_10_IRQn);
+	NVIC_EnableIRQ(CC2500_SPI_INT_EXTI_IRQn);
 }
 
 /**

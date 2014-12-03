@@ -49,10 +49,10 @@
 #define CC2500_SPI_INT_PIN                GPIO_Pin_12                  /* PB.12 */
 #define CC2500_SPI_INT_GPIO_PORT          GPIOB                        /* GPIOB */
 #define CC2500_SPI_INT_GPIO_CLK           RCC_AHB1Periph_GPIOB
-#define CC2500_SPI_INT_EXTI_LINE          EXTI_Line1
+#define CC2500_SPI_INT_EXTI_LINE          EXTI_Line12
 #define CC2500_SPI_INT_EXTI_PORT_SOURCE   EXTI_PortSourceGPIOB
-#define CC2500_SPI_INT_EXTI_PIN_SOURCE    EXTI_PinSource1
-#define CC2500_SPI_INT_EXTI_IRQn          EXTI1_IRQn
+#define CC2500_SPI_INT_EXTI_PIN_SOURCE    EXTI_PinSource12
+#define CC2500_SPI_INT_EXTI_IRQn          EXTI15_10_IRQn
 
 
 /******************************************************************************/
@@ -152,7 +152,7 @@ CC2500_STROBE_SNOP         =      ((uint8_t)0x3D)
   */ 
 #define SMARTRF_SETTING_FSCTRL1 						0x0C//0x12 //Frequency offset = 304kHz
 #define SMARTRF_SETTING_FSCTRL0 						0x00
-#define SMARTRF_SETTING_FREQ2 							0x5D // Carrier Frequency is 2.433GHz
+#define SMARTRF_SETTING_FREQ2 							0x5E // Carrier Frequency is 2.433GHz
 #define SMARTRF_SETTING_FREQ1 							0x93
 #define SMARTRF_SETTING_FREQ0 							0xB1
 #define SMARTRF_SETTING_MDMCFG4					 		0x0E //0x2D // BW of channel = 541.666kHz
@@ -184,7 +184,7 @@ CC2500_STROBE_SNOP         =      ((uint8_t)0x3D)
 #define SMARTRF_SETTING_IOCFG0 							0x06
 #define SMARTRF_SETTING_PKTCTRL1						   0x04
 #define SMARTRF_SETTING_PKTCTRL0 						0x04 //0x05 // Fixed Packet Length (0x05)
-#define SMARTRF_SETTING_ADDR 								0x00 // Global Broadcast Address
+#define SMARTRF_SETTING_ADDR 								0x02 // Global Broadcast Address
 #define SMARTRF_SETTING_PKTLEN 							0x03 // Packet Length of 3 bytes (0xFF)
 
   /** @defgroup CC2500_Exported_Macros
