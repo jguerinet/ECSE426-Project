@@ -25,6 +25,9 @@
 //Proximity Sensor Signal
 #define PROXIMITY_SENSOR_SIGNAL (int32_t) 0x02
 
+/* TEST BOOLEANS (set to true the part you want to test */
+int motor = 0; 
+
 /* METHODS FROM OTHER FILES */
 //Proximity Sensor
 extern void initializeProximitySensor(void); 
@@ -32,7 +35,9 @@ extern uint8_t getSensorDistance(void);
 //Motor
 extern void initializeMotor(void);
 extern void updateMotor(void); 
-extern uint8_t getMotorAngle(void); 
+extern uint8_t getMotorAngle(void);
+//Test
+extern void testMotor(void);
 
 /* THREAD FUNCTIONS */
 //LCD
@@ -92,6 +97,11 @@ Coordinates sensorCoordinates = {-1, -1};
 Coordinates wirelessCoordinates = {-1, -1};
 
 int main (void) {
+	//Check if we are testing something
+	if(motor){
+		testMotor();
+	}
+	
 	//Initialize CMSIS-RTOS
   osKernelInitialize ();                    
 	
