@@ -3,19 +3,19 @@
 #include "stm32f4xx.h"
 #include "stm32f4xx_conf.h"
 
-void initializeADC1(void);	
+void initializeADC3(void);	
 
 /**
 	Method that initializes the proximity sensor
 */
 void initializeProximitySensor() {
 	//Initializes ADC1
-	initializeADC1();
+	initializeADC3();
 	
 	//Enables the ADC
 	ADC_Cmd(ADC1, ENABLE);
 	
-	//Select the ADC_Channel_1 and set sample time
+	//Select the ADC_Channel_14 and set sample time
 	ADC_RegularChannelConfig(ADC1, ADC_Channel_1, 1, ADC_SampleTime_480Cycles);
 	
 	//Define the initializer struct 
@@ -29,15 +29,15 @@ void initializeProximitySensor() {
 	
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 
-	//we want pin A9
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;
+	//we want pin F4
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
 	
 	//Initialize the LEDs
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 }
 
-/* Initializes the ADC1 */
-void initializeADC1(void) {
+/* Initializes the ADC3 */
+void initializeADC3(void) {
 	//Declare the initializer structs for the ADC 
 	ADC_InitTypeDef adc_init_structure;
 	ADC_CommonInitTypeDef adc_common_init_structure;

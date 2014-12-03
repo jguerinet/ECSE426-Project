@@ -130,5 +130,5 @@ void updateMotor(void){
 */
 uint8_t getMotorAngle(void){
 	//TODO
-	return 180; 
+	return 90; 
 }

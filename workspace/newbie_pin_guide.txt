@@ -18,4 +18,4 @@ Yellow Wire -> PA10
 - Between Proximity Sensor and Main Board
 Red Wire -> 3V
 Black Wire -> GND
-Yellow Wire -> PA9
+Yellow Wire -> PF4

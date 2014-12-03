@@ -7,6 +7,7 @@
 #include "stm32f429i_discovery_lcd.h"
 #include "stm32f429i_discovery_l3gd20.h"
 #include "background16bpp.h"
+#include "filter.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -43,7 +44,7 @@ void wireless(void const *arg);
 
 /* THREAD DEFINITIONS */
 //LCD
-osThreadDef(lcd, osPriorityNormal, 1, 0);
+osThreadDef(lcd, osPriorityLow, 1, 0);
 //Proximity Sensor
 osThreadDef(proximitySensor, osPriorityHigh, 1, 0); 
 //Wireless
@@ -112,7 +113,7 @@ int main (void) {
 	
 	//Initialize GPIO A Board
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOF, ENABLE);
 	
 	/* PROXIMITY SENSOR */
 	initializeProximitySensor(); 
@@ -143,19 +144,6 @@ void lcd(void const *arg){
 	LCD_Clear(LCD_COLOR_WHITE);
 	LCD_SetFont(&Font8x8);
 	
-	//Draw the grid in blue
-	LCD_SetTextColor(LCD_COLOR_BLUE2);
-	int i = 0;
-	int j = 0;
-	//Horizontal Lines
-	for (i = 10; i <= 310; i = i+60){
-		LCD_DrawLine(10, i, 220, LCD_DIR_HORIZONTAL);
-	}
-	//Vertical lines 
-	for (j = 10; j <= 230; j = j+44){
-		LCD_DrawLine(j, 10, 300, LCD_DIR_VERTICAL);
-	}
-	
 	//This will keep track of the x and y coordinates that are currently mapped 
 	int16_t xMapped = -1; 
 	int16_t yMapped = -1;
@@ -166,7 +154,7 @@ void lcd(void const *arg){
 	
 	//Set up the timer and start it
 	osTimerId displayTimerId = osTimerCreate(osTimer(displayTimer), osTimerPeriodic, NULL); 
-	osTimerStart(displayTimerId, 200); 
+	osTimerStart(displayTimerId, 100); 
 	
 	//Main Loop
 	while(1){
@@ -206,6 +194,19 @@ void lcd(void const *arg){
 		if(xMapped != -1){
 			LCD_SetTextColor(LCD_COLOR_WHITE);
 			LCD_DrawFullCircle(xMapped, yMapped, 4);
+		}
+		
+		//Draw the grid in blue
+		LCD_SetTextColor(LCD_COLOR_BLUE2);
+		int i = 0;
+		int j = 0;
+		//Horizontal Lines
+		for (i = 10; i <= 310; i = i+60){
+			LCD_DrawLine(10, i, 220, LCD_DIR_HORIZONTAL);
+		}
+		//Vertical lines 
+		for (j = 10; j <= 230; j = j+44){
+			LCD_DrawLine(j, 10, 300, LCD_DIR_VERTICAL);
 		}
 		
 		//Check if there is a new position
@@ -248,13 +249,18 @@ void proximitySensor(void const* argument){
 	float x = -1; 
 	float y = -1; 
 	
+	//Moving Average filter for the distances
+	filter filter; 
+	initializeFilter(&filter); 
+	
 	//Main Loop
 	while(1){
 		//Wait until the display signal is set
 		osSignalWait(PROXIMITY_SENSOR_SIGNAL, osWaitForever);
 		
 		//Get the measured distance from the sensor
-		uint8_t distance = getSensorDistance(); 
+		calculateMovingAverage(&filter, getSensorDistance());
+		uint8_t distance = filter.average; 
 		
 		printf("Distance: %d\n", distance); 
 		
