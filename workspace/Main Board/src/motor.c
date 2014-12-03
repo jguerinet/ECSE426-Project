@@ -13,6 +13,8 @@ int increasingAngle;
 
 /* Initializes the Servo Motor */ 
 void initializeMotor(void) {
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+	
 	//define the initializer struct 
 	GPIO_InitTypeDef GPIO_InitStructure;
 	

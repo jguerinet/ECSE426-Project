@@ -105,9 +105,6 @@ int main (void) {
   //Set LCD foreground layer as the current layer
   LCD_SetLayer(LCD_FOREGROUND_LAYER);
 	
-	//Initialize GPIO A Board
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
-	
 	/* PROXIMITY SENSOR */
 	initializeProximitySensor(); 
 	
