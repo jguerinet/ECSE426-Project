@@ -25,3 +25,24 @@ void testMotor(void){
 		delay(15); 
 	}
 }
+
+/** PROXIMITY SENSOR **/
+extern void initializeProximitySensor(void); 
+extern uint8_t getSensorDistance(void); 
+
+void testProximitySensor(void){
+	//Initialize the proximity sensor
+	initializeProximitySensor(); 
+	
+	//In an infinite loop, read the sensor values
+	while(1){
+		//Read the values 
+		uint8_t distance = getSensorDistance(); 
+		
+		//Print 
+		printf("Distance: %d\n", distance); 
+		
+		//Delay
+		delay(15); 
+	}
+}

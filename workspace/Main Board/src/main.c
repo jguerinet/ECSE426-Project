@@ -27,6 +27,7 @@
 
 /* TEST BOOLEANS (set to true the part you want to test */
 int motor = 0; 
+int sensor = 0; 
 
 /* METHODS FROM OTHER FILES */
 //Proximity Sensor
@@ -38,6 +39,7 @@ extern void updateMotor(void);
 extern uint8_t getMotorAngle(void);
 //Test
 extern void testMotor(void);
+extern void testProximitySensor(void); 
 
 /* THREAD FUNCTIONS */
 //LCD
@@ -100,6 +102,9 @@ int main (void) {
 	//Check if we are testing something
 	if(motor){
 		testMotor();
+	}
+	else if(sensor){
+		testProximitySensor(); 
 	}
 	
 	//Initialize CMSIS-RTOS
