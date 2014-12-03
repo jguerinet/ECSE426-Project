@@ -20,11 +20,11 @@ osThreadId	Rx_thread;
 osThreadId  Tx_thread;
 	
 void Blinky_GPIO_Init(void){
-	GPIO_InitTypeDef GPIO_InitStructure;
+  GPIO_InitTypeDef GPIO_InitStructure;
 	
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
 
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_13| GPIO_Pin_14| GPIO_Pin_15;
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_13| GPIO_Pin_14| GPIO_Pin_15;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
@@ -39,9 +39,13 @@ void RxPacket(void const *argument){
    float rssi;
 	GPIO_ResetBits(GPIOD, GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
 	printf("Thread_started. waitig for sigal\n");
+   // put the device in rx mode
 	CC2500_Strobe(CC2500_STROBE_SRX, 0x00);
 	while(1){
 		osSignalWait(RX_PKT, osWaitForever);
+      // wait until all the bytes are recieved
+      buf = CC2500_Strobe(CC2500_STROBE_SNOP, 0x01);
+      // toggle LEDS indicating RX
 		GPIO_ToggleBits(GPIOD, GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
 		CC2500_Read((uint8_t*)packet, CC2500_FIFO_ADDR, 0x04);
       rssi = CC2500_ComputeRssi((float)packet[2]);
@@ -53,151 +57,38 @@ void RxPacket(void const *argument){
 }
 
 void TxPacket(void const *argument) {
-   uint8_t buf[2], reg;
-   buf[0] = 0x2B;
-   buf[1] = 0x00;
+   uint8_t buf[2];
+   buf[0] = SMARTRF_SETTING_ADDR; // src address on the first byte
+   buf[1] = 0x00; // packet sequence number
    while (1) {
       GPIO_ToggleBits(GPIOD, GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
       CC2500_TxPacket((uint8_t*)buf, 0x02);
-      printf("transmitted byte: 0x%02x\n", buf[1]);
-      osDelay(1000);
+      printf("transmitted byte: SRC: 0x%02x\t\t SEQ: 0x%02x\n", buf[0], buf[1]);
+      
+      // increment the sequence by 1. roll over if reached 255
       if (buf[1] == 0xFF)
          buf[1] = 0x00;
       else {
          buf[1]++;
       }
+      osDelay(100);
    }
 }
 
-osThreadDef(RxPacket, osPriorityNormal, 1, 0);
 osThreadDef(TxPacket, osPriorityNormal, 1, 0);
 
 /*
  * main: initialize and start the system
  */
 int main (void) {
-  uint8_t buf;
-	osKernelInitialize ();                    // initialize CMSIS-RTOS
+	osKernelInitialize ();              // initialize CMSIS-RTOS
   
-  // initialize peripherals here
+   // initialize peripherals here
 	Blinky_GPIO_Init();
 	wireless_init();
-	
-  // create 'thread' functions that start executing,
-  // example: tid_name = osThreadCreate (osThread(name), NULL);
-	//Rx_thread = osThreadCreate(osThread(RxPacket), NULL);
-    
-	uint8_t reg;
 
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FSCTRL1, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FSCTRL0, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FREQ2, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FREQ1, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FREQ0, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_MDMCFG4, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_MDMCFG3, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_MDMCFG2, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_MDMCFG1, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_MDMCFG0, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_CHANNR, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_DEVIATN, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FRIEND1, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FRIEND0, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_MCSM0, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FOCCFG, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_BSCFG, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_AGCCTRL2, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_AGCCTRL1, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_AGCCTRL0, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FSCAL3, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FSCAL2, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FSCAL1, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FSCAL0, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,SMARTRF_SETTING_FSTEST, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_TEST2, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_TEST1, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_TEST0, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_FIFOTHR, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_IOCFG2, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_IOCFG0, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_PKTCTRL1, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_PKTCTRL0, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_ADDR, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
-	CC2500_Read(&buf,CC2500_CFG_REG_PKTLEN, 1);
-	printf("RSSI: 0x%02x\n", buf);
-	
    Tx_thread = osThreadCreate(osThread(TxPacket), NULL);
-   Rx_thread = osThreadCreate(osThread(RxPacket), NULL);
-	osKernelStart();
+	osKernelStart();  // start threading
 }
 
 void wireless_init() {
