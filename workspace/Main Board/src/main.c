@@ -30,6 +30,11 @@ int motor = 0;
 int sensor = 0; 
 
 /* METHODS FROM OTHER FILES */
+//LCD
+extern void initializeLCD(void); 
+extern void clearPosition(int16_t x, int16_t y);
+extern void drawPosition(int16_t x, int16_t y); 
+extern void drawGrid(void); 
 //Proximity Sensor
 extern void initializeProximitySensor(void); 
 extern uint8_t getSensorDistance(void); 
@@ -111,14 +116,7 @@ int main (void) {
   osKernelInitialize ();                    
 	
 	/* LCD */
-	//LCD Initialization
-  LCD_Init();
-  //LCD Layer Initialization
-  LCD_LayerInit();
-  //Enable the LTDC controller
-  LTDC_Cmd(ENABLE);
-  //Set LCD foreground layer as the current layer
-  LCD_SetLayer(LCD_FOREGROUND_LAYER);
+	initializeLCD(); 
 	
 	/* PROXIMITY SENSOR */
 	initializeProximitySensor(); 
@@ -145,10 +143,6 @@ int main (void) {
 	* The LCD screen thread. 
   */
 void lcd(void const *arg){
-	//Clear the LCD
-	LCD_Clear(LCD_COLOR_WHITE);
-	LCD_SetFont(&Font8x8);
-	
 	//This will keep track of the x and y coordinates that are currently mapped 
 	int16_t xMapped = -1; 
 	int16_t yMapped = -1;
@@ -197,21 +191,7 @@ void lcd(void const *arg){
 		
 		//If there was a previous position, hide it
 		if(xMapped != -1){
-			LCD_SetTextColor(LCD_COLOR_WHITE);
-			LCD_DrawFullCircle(xMapped, yMapped, 4);
-		}
-		
-		//Draw the grid in blue
-		LCD_SetTextColor(LCD_COLOR_BLUE2);
-		int i = 0;
-		int j = 0;
-		//Horizontal Lines
-		for (i = 10; i <= 310; i = i+60){
-			LCD_DrawLine(10, i, 220, LCD_DIR_HORIZONTAL);
-		}
-		//Vertical lines 
-		for (j = 10; j <= 230; j = j+44){
-			LCD_DrawLine(j, 10, 300, LCD_DIR_VERTICAL);
+			clearPosition(xMapped, yMapped); 
 		}
 		
 		//Check if there is a new position
@@ -226,10 +206,12 @@ void lcd(void const *arg){
 		xMapped = (x * 220 / MAX_X) + 10;
 		yMapped = (y * 300/ MAX_Y) + 10;
 		
+		//Draw the grid
+		drawGrid(); 
+		
 		//Show the position on the screen if it is in bounds and existant
 		if (xMapped > 9 && xMapped < 231 & yMapped > 9 && yMapped < 311){
-			LCD_SetTextColor(LCD_COLOR_RED);
-			LCD_DrawFullCircle(xMapped, yMapped, 4); 
+			drawPosition(xMapped, yMapped);  
 		}
 		else{
 			//Printf error message
