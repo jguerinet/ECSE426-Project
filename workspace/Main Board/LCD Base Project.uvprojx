@@ -424,6 +424,26 @@
               <FileType>1</FileType>
               <FilePath>.\src\fputc_debug.c</FilePath>
             </File>
+            <File>
+              <FileName>proximitySensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\proximitySensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\motor.c</FilePath>
+            </File>
+            <File>
+              <FileName>filter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\filter.c</FilePath>
+            </File>
+            <File>
+              <FileName>filter.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\filter.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -682,7 +702,7 @@
 
   <RTE>
     <apis>
-      <api Capiversion="1.0" Cclass="CMSIS" Cgroup="RTOS" Cvendor="ARM" exclusive="1">
+      <api Capiversion="1.0" Cclass="CMSIS" Cgroup="RTOS" exclusive="1">
         <package name="CMSIS" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="ARM" version="4.1.1"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
