@@ -10,6 +10,14 @@ P16 ---> PB13
 P17 ---> PB11
 P18 ---> PB15
 
+p1  ---> GND
+p2  ---> 3V
+p13 ---> PE4
+p15 ---> PE5
+p16 ---> PE2
+p17 ---> PE3
+p18 ---> PE6
+
 - Between Motor and Main Board
 Red Wire -> 5V
 Black Wire -> GND
