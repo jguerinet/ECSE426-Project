@@ -6,7 +6,6 @@
 #include "stm32f429i_discovery.h"
 #include "stm32f429i_discovery_lcd.h"
 #include "stm32f429i_discovery_l3gd20.h"
-#include "background16bpp.h"
 #include "filter.h"
 
 #include <stdio.h>
@@ -28,6 +27,7 @@
 /* TEST BOOLEANS (set to true the part you want to test */
 int motor = 0; 
 int sensor = 0; 
+int lcdDisplay = 0; 
 
 /* METHODS FROM OTHER FILES */
 //LCD
@@ -45,6 +45,7 @@ extern uint8_t getMotorAngle(void);
 //Test
 extern void testMotor(void);
 extern void testProximitySensor(void); 
+extern void testLCD(void); 
 
 /* THREAD FUNCTIONS */
 //LCD
@@ -110,6 +111,9 @@ int main (void) {
 	}
 	else if(sensor){
 		testProximitySensor(); 
+	}
+	else if(lcdDisplay){
+		testLCD(); 
 	}
 	
 	//Initialize CMSIS-RTOS
@@ -210,7 +214,7 @@ void lcd(void const *arg){
 		drawGrid(); 
 		
 		//Show the position on the screen if it is in bounds and existant
-		if (xMapped > 9 && xMapped < 231 & yMapped > 9 && yMapped < 311){
+		if (xMapped >= 10 && xMapped <= 230 & yMapped >= 10 && yMapped <= 310){
 			drawPosition(xMapped, yMapped);  
 		}
 		else{

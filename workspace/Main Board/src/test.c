@@ -46,3 +46,40 @@ void testProximitySensor(void){
 		delay(15); 
 	}
 }
+
+/** LCD SCREEN **/
+extern void initializeLCD(void); 
+extern void clearPosition(uint16_t x, uint16_t y); 
+extern void drawPosition(uint16_t x, uint16_t y); 
+extern void drawGrid(void); 
+
+void testLCD(void){
+	//Initialize the proximity sensor
+	initializeLCD(); 
+	
+	int16_t x = 230; 
+	int16_t y = 320; 
+	
+	//In an infinite loop, show the point at every position
+	while(1){
+		for(int i = 10; i <= 230; i += 10){
+			for(int j = 10; j <= 320; j += 10){
+				//Clear the previous position
+				clearPosition(x, y); 
+				
+				//Draw the grid lines
+				drawGrid(); 
+				
+				//Get the new position
+				x = i; 
+				y = j; 
+				
+				//Draw the new position
+				drawPosition(x, y); 
+				
+				//Delay
+				delay(15); 
+			}
+		}
+	}
+}
