@@ -91,12 +91,6 @@ Coordinates sensorCoordinates = {-1, -1};
 //This will contain the coordinates measured by the boards
 Coordinates wirelessCoordinates = {-1, -1};
 
-//Helper method to simulate a delay
-static void delay(__IO uint32_t nCount){
-  __IO uint32_t index = 0; 
-  for(index = 100000*nCount; index != 0; index--){}
-}
-
 int main (void) {
 	//Initialize CMSIS-RTOS
   osKernelInitialize ();                    
@@ -113,7 +107,6 @@ int main (void) {
 	
 	//Initialize GPIO A Board
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOF, ENABLE);
 	
 	/* PROXIMITY SENSOR */
 	initializeProximitySensor(); 
@@ -154,7 +147,7 @@ void lcd(void const *arg){
 	
 	//Set up the timer and start it
 	osTimerId displayTimerId = osTimerCreate(osTimer(displayTimer), osTimerPeriodic, NULL); 
-	osTimerStart(displayTimerId, 100); 
+	osTimerStart(displayTimerId, 300); 
 	
 	//Main Loop
 	while(1){
@@ -224,8 +217,7 @@ void lcd(void const *arg){
 		//Show the position on the screen if it is in bounds and existant
 		if (xMapped > 9 && xMapped < 231 & yMapped > 9 && yMapped < 311){
 			LCD_SetTextColor(LCD_COLOR_RED);
-			LCD_DrawFullCircle(xMapped, yMapped, 4);
-			delay(125); 
+			LCD_DrawFullCircle(xMapped, yMapped, 4); 
 		}
 		else{
 			//Printf error message
@@ -243,7 +235,7 @@ void lcd(void const *arg){
 void proximitySensor(void const* argument){
 	//Set up the timer and start it
 	osTimerId proximitySensorTimerId = osTimerCreate(osTimer(proximitySensorTimer), osTimerPeriodic, NULL); 
-	osTimerStart(proximitySensorTimerId, 20); 
+	osTimerStart(proximitySensorTimerId, 100); 
 	
 	//These will keep track of the x and y coordinates for the measured person
 	float x = -1; 
@@ -262,7 +254,7 @@ void proximitySensor(void const* argument){
 		calculateMovingAverage(&filter, getSensorDistance());
 		uint8_t distance = filter.average; 
 		
-		printf("Distance: %d\n", distance); 
+		//printf("Distance: %d\n", distance); 
 		
 		//If the distance was 0, just set the x and y coordinates to -1
 		if(distance == 0){
