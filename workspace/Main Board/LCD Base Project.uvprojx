@@ -14,6 +14,8 @@
         <TargetCommonOption>
           <Device>STM32F429ZI</Device>
           <Vendor>STMicroelectronics</Vendor>
+          <PackID>Keil.STM32F4xx_DFP.1.0.8</PackID>
+          <PackURL>http://www.keil.com/pack</PackURL>
           <Cpu>IROM(0x08000000,0x200000) IRAM(0x20000000,0x30000) IRAM2(0x10000000,0x10000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
@@ -72,6 +74,8 @@
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
+            <nStopB1X>0</nStopB1X>
+            <nStopB2X>0</nStopB2X>
           </BeforeMake>
           <AfterMake>
             <RunUserProg1>0</RunUserProg1>
@@ -128,6 +132,7 @@
             <RestoreFunctions>1</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
+            <RestoreSysVw>1</RestoreSysVw>
           </Simulator>
           <Target>
             <UseTarget>1</UseTarget>
@@ -139,8 +144,7 @@
             <RestoreFunctions>0</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>1</RestoreTracepoints>
-            <RestoreTracepoints>1</RestoreTracepoints>
-            <RestoreTracepoints>1</RestoreTracepoints>
+            <RestoreSysVw>1</RestoreSysVw>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
           <TargetSelection>11</TargetSelection>
@@ -361,7 +365,7 @@
               <MiscControls>--c99</MiscControls>
               <Define>HSE_VALUE=8000000 USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>.\inc;.\src</IncludePath>
+              <IncludePath>.\inc;.\src;.\RTE;.\RTE\Device\STM32F429ZI</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -444,6 +448,26 @@
               <FileType>5</FileType>
               <FilePath>.\src\filter.h</FilePath>
             </File>
+            <File>
+              <FileName>cc2500.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\cc2500.c</FilePath>
+            </File>
+            <File>
+              <FileName>cc2500Interface.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\cc2500Interface.c</FilePath>
+            </File>
+            <File>
+              <FileName>test.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\test.c</FilePath>
+            </File>
+            <File>
+              <FileName>lcd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\lcd.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -474,30 +498,25 @@
               <FileType>5</FileType>
               <FilePath>.\inc\cc2500.h</FilePath>
             </File>
-            <File>
-              <FileName>cc2500.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\cc2500_driver\cc2500.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>::CMSIS</GroupName>
           <Files>
             <File>
+              <FileName>RTX_Conf_CM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>RTE\CMSIS\RTX_Conf_CM.c</FilePath>
+            </File>
+            <File>
               <FileName>arm_cortexM4lf_math.lib</FileName>
               <FileType>4</FileType>
-              <FilePath>C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Lib\ARM\arm_cortexM4lf_math.lib</FilePath>
+              <FilePath>C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Lib\ARM\arm_cortexM4lf_math.lib</FilePath>
             </File>
             <File>
               <FileName>RTX_CM4.lib</FileName>
               <FileType>4</FileType>
-              <FilePath>C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS_RTX\LIB\ARM\RTX_CM4.lib</FilePath>
-            </File>
-            <File>
-              <FileName>RTX_Conf_CM.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>RTE\CMSIS\RTX_Conf_CM.c</FilePath>
+              <FilePath>C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS_RTX\LIB\ARM\RTX_CM4.lib</FilePath>
             </File>
           </Files>
         </Group>

@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include "cc2500.h"
 
-#define Transmit_Interval  100
+#define Transmit_Interval  1000
 
 // ID for thread
 osThreadId	Rx_thread;
@@ -45,6 +45,7 @@ void TxPacket(void const *argument) {
    pkt.Aux_rssi = 0x00; // Aux sequence N/A
    while (1) {
       GPIO_ToggleBits(GPIOD, GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
+      CC2500_Strobe(CC2500_STROBE_SFRX, 0x00);
       CC2500_TxPacket((uint8_t*)&pkt, SMARTRF_SETTING_PKTLEN);
       printf("Transmitted Data: SRC: 0x%02x\t\t SEQ: 0x%02x\n", pkt.Src_addr, pkt.Seq_num);
       

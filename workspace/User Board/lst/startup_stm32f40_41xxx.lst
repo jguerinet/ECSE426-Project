@@ -862,10 +862,10 @@ vmware-host\Shared Folders\Documents\git\ecse426\ECSE426-Project\workspace\User
  Board\RTE\Device\STM32F407VG" -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Incl
 ude -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS_RTX\INC -IC:\Keil_v5\ARM\PACK\K
 eil\STM32F4xx_DFP\1.0.8\Device\Include -IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP
-\1.0.8\Device\StdPeriph_Driver\inc --predefine="__RTX SETA 1" --predefine="__EV
-AL SETA 1" --predefine="__MICROLIB SETA 1" --predefine="_RTE_ SETA 1" --predefi
-ne="STM32F40_41xxx SETA 1" --list=.\lst\startup_stm32f40_41xxx.lst RTE\Device\S
-TM32F407VG\startup_stm32f40_41xxx.s
+\1.0.8\Device\StdPeriph_Driver\inc --predefine="__RTX SETA 1" --predefine="__MI
+CROLIB SETA 1" --predefine="_RTE_ SETA 1" --predefine="STM32F40_41xxx SETA 1" -
+-list=.\lst\startup_stm32f40_41xxx.lst RTE\Device\STM32F407VG\startup_stm32f40_
+41xxx.s
 
 
 
@@ -1959,4 +1959,4 @@ Symbol: __main
       At line 184 in file RTE\Device\STM32F407VG\startup_stm32f40_41xxx.s
 Comment: __main used once
 2 symbols
-447 symbols in table
+446 symbols in table

@@ -2641,3 +2641,141 @@ Memory Map of the image
     0x20001a9c   0x00000004   PAD
     0x20001aa0   0x00000400   Zero   RW         1169    STACK               startup_stm32f429_439xx.o
 
+
+==============================================================================
+
+Image component sizes
+
+
+      Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
+
+      1212         32          0          0          0       3698   cc2500.o
+       144          6          0          0          0      27236   cc2500interface.o
+        72          0          0          0          0       1300   filter.o
+        56          6          0          0          0      28359   fputc_debug.o
+       160          6          0          0          0       1084   lcd.o
+      1288        208         72         48         72     370057   main.o
+       224         20          0          0          0       2005   misc.o
+       296         16          0          8          0       1521   motor.o
+       652         32          0          0          0       1606   proximitysensor.o
+        54          6         86         32       6416       7450   rtx_conf_cm.o
+        36          8        428          0       1024        892   startup_stm32f429_439xx.o
+      6972        122      10704         48          0      19033   stm32f429i_discovery_lcd.o
+       964         28          0          0          0       2652   stm32f429i_discovery_sdram.o
+      1124         24          0          0          0      10678   stm32f4xx_adc.o
+       948         12          0          0          0       5111   stm32f4xx_dma2d.o
+       272         10          0          0          0       2451   stm32f4xx_exti.o
+      2284         14          0          0          0       7588   stm32f4xx_fmc.o
+       660         44          0          0          0       4281   stm32f4xx_gpio.o
+      1672         18          0          0          0       8012   stm32f4xx_ltdc.o
+      1592         54          0         16          0      12978   stm32f4xx_rcc.o
+      1102         32          0          0          0       7045   stm32f4xx_spi.o
+       148         12          0          0          0       1909   stm32f4xx_syscfg.o
+      3234         60          0          0          0      22484   stm32f4xx_tim.o
+       580         46          0         20          0       2071   system_stm32f4xx.o
+       168         22          0          0          0       1508   test.o
+
+    ----------------------------------------------------------------------
+     25920        838      11328        172       7516     553009   Object Totals
+         0          0         32          0          0          0   (incl. Generated)
+         6          0          6          0          4          0   (incl. Padding)
+
+    ----------------------------------------------------------------------
+
+      Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Library Member Name
+
+       220         24          0          1          0       3528   hal_cm.o
+       384         28          0          0          0        728   hal_cm4.o
+      1824        206          0          8          0      37359   rt_cmsis.o
+       272         18          0          0          0       2230   rt_event.o
+       526         36          0          0         48       7069   rt_list.o
+       546         10          0          0          0       3285   rt_mailbox.o
+       128          0          0          0          0       1621   rt_membox.o
+       126          0          0          0          0       1935   rt_memory.o
+       336         12          0          0          0       1789   rt_mutex.o
+        96         22          0          8          0       1050   rt_robin.o
+        52          4          0          0          0        497   rt_semaphore.o
+       298         54          0          8          0       5667   rt_system.o
+      1200        174          0          8         52       8409   rt_task.o
+         6          0          0          4          0        548   rt_time.o
+         4          4          0          0          0        132   svc_table.o
+       200         20          0          0          0        164   cos.o
+       368         46         48          0          0        200   cos_i.o
+       184         44          0          0          0        744   dunder.o
+        24          0          0          0          0        124   fabs.o
+        48          0          0          0          0        124   fpclassify.o
+       248          0          0          0          0        152   poly.o
+      3128        302        136          0          0        356   pow.o
+         0          0          8          0          0          0   qnan.o
+      1080        142        200          0          0        188   rred.o
+       200         20          0          0          0        164   sin.o
+       304         24         40          0          0        208   sin_i.o
+       232          0          0          0          0        296   sqrt.o
+         0          0          0          0          0          0   entry.o
+         0          0          0          0          0          0   entry10a.o
+         0          0          0          0          0          0   entry11a.o
+         8          4          0          0          0          0   entry2.o
+         4          0          0          0          0          0   entry5.o
+         0          0          0          0          0          0   entry7b.o
+         0          0          0          0          0          0   entry8b.o
+        12          6          0          4          0         68   errno.o
+        30          0          0          0          0          0   handlers.o
+        36          8          0          0          0         68   init.o
+         0          0          0          0          0          0   iusefp.o
+        30          0          0          0          0         68   llshl.o
+        36          0          0          0          0         68   llsshr.o
+        32          0          0          0          0         68   llushr.o
+      2226         90          0          0          0        444   printfa.o
+         0          0          0          4          0          0   stdout.o
+        44          0          0          0          0         80   uidiv.o
+        98          0          0          0          0         92   uldiv.o
+        48          0          0          0          0         68   cdrcmple.o
+        56          0          0          0          0         88   d2f.o
+       334          0          0          0          0        148   dadd.o
+       222          0          0          0          0        100   ddiv.o
+       186          0          0          0          0        176   depilogue.o
+        62          0          0          0          0         80   dfixi.o
+        48          0          0          0          0         68   dfixul.o
+        34          0          0          0          0         76   dflti.o
+        26          0          0          0          0         76   dfltui.o
+       228          0          0          0          0         96   dmul.o
+        46          0          0          0          0         80   dscalb.o
+       162          0          0          0          0        100   dsqrt.o
+        38          0          0          0          0         68   f2d.o
+       110          0          0          0          0        168   fepilogue.o
+
+    ----------------------------------------------------------------------
+     16224       1298        432         48        104      80915   Library Totals
+        34          0          0          3          4          0   (incl. Padding)
+
+    ----------------------------------------------------------------------
+
+      Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Library Name
+
+      6018        592          0         37        100      75847   RTX_CM4.lib
+      6016        598        432          0          0       2720   m_wm.l
+      2556        108          0          8          0        956   mc_w.l
+      1600          0          0          0          0       1392   mf_w.l
+
+    ----------------------------------------------------------------------
+     16224       1298        432         48        104      80915   Library Totals
+
+    ----------------------------------------------------------------------
+
+==============================================================================
+
+
+      Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
+
+     42144       2136      11760        220       7620     616632   Grand Totals
+     42144       2136      11760        220       7620     616632   ELF Image Totals
+     42144       2136      11760        220          0          0   ROM Totals
+
+==============================================================================
+
+    Total RO  Size (Code + RO Data)                53904 (  52.64kB)
+    Total RW  Size (RW Data + ZI Data)              7840 (   7.66kB)
+    Total ROM Size (Code + RO Data + RW Data)      54124 (  52.86kB)
+
+==============================================================================
+
