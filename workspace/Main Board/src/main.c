@@ -323,51 +323,59 @@ void proximitySensor(void const* argument){
 	The wireless thread
 */
 void wireless(void const* arg){
+	//This will keep track of the last known received sequence and the user RSSI received
 	uint8_t last_known_seq, user_rssi_dec;
+	//The packet struct
 	Packet pkt;
-   float rssi_user, rssi_aux;
-   uint8_t filter_aux_buffer[RSSI_FILTER_DEPTH], filter_user_buffer[RSSI_FILTER_DEPTH];
-   Filter filter_aux, filter_user;
+	//The RSSIs reported by both boards
+  float rssi_user, rssi_aux;
+	//The two moving average filters
+  uint8_t filter_aux_buffer[RSSI_FILTER_DEPTH], filter_user_buffer[RSSI_FILTER_DEPTH];
+  Filter filter_aux, filter_user;
    
-   // Initialize filters
-   filter_init(&filter_aux, (int32_t*)filter_aux_buffer, RSSI_FILTER_DEPTH);
-   filter_init(&filter_user, (int32_t*)filter_user_buffer, RSSI_FILTER_DEPTH);
+  //Initialize filters
+  filter_init(&filter_aux, (int32_t*)filter_aux_buffer, RSSI_FILTER_DEPTH);
+  filter_init(&filter_user, (int32_t*)filter_user_buffer, RSSI_FILTER_DEPTH);
    
-	// define the aux filter and user filter	
-	printf("Thread_started. waitig for signal\n");
+	printf("Thread_started. Waiting for signal\n");
 	//Put the board in Rx mode
 	CC2500_Strobe(CC2500_STROBE_SRX, 0x00);
 	
+	//Main loop
 	while(1){
+		//Wait for the signal 
 		osSignalWait(RX_PKT, osWaitForever);
-		GPIO_ToggleBits(GPIOG, GPIO_Pin_13 | GPIO_Pin_14);
+		
+		//Read the packet from the RX FIFO 
 		CC2500_Read((uint8_t*)&pkt, CC2500_FIFO_ADDR, SMARTRF_SETTING_PKTLEN + 2);
     
 		printf("Source: %u\t\t Sequence: %u\n", pkt.Src_addr, pkt.Seq_num); 
 		
-		// if the packet recieved is from user, store the seq and rssi
+		//If the packet recieved is from user, store the seq and rssi
 		if (pkt.Src_addr == 0x01) {
 			last_known_seq = pkt.Seq_num;
 			user_rssi_dec = pkt.Rssi;
 		}
 		
-     uint8_t buf = CC2500_Strobe(CC2500_STROBE_SNOP, 0x01);
-		printf("Buffer: 0x%02x\n", buf); 
-		
-		// if the packet recieved is from aux board, and seq number match, we have
+		//If the packet recieved is from aux board, and seq number match, we have
 		// a complete set of readings
 		if (pkt.Src_addr == 0x02 && pkt.Seq_num == last_known_seq) {
+			//Compute the RSSI received by the aux
 			rssi_aux = CC2500_ComputeRssi((float)pkt.Aux_rssi);
 			
 			//printf("SEQ: %u\t\tRSSI_USER: %0.02f\t\tRSSI_AUX: %0.02f\n", last_known_seq, rssi_user, rssi_aux);
-			// pass through the filter
-         filter_add(&filter_aux, user_rssi_dec);
-         filter_add(&filter_user, pkt.Aux_rssi);
-			// get the average frmo the filters
+			
+			//Pass the data through the filter
+      filter_add(&filter_aux, user_rssi_dec);
+      filter_add(&filter_user, pkt.Aux_rssi);
+			
+			//Get the average frmo the filters
 			rssi_user = CC2500_ComputeRssi((float)filter_avg(&filter_user));
-         rssi_aux = CC2500_ComputeRssi((float)filter_avg(&filter_aux));
-			// go through database to convert rssi  -> x,y
+      rssi_aux = CC2500_ComputeRssi((float)filter_avg(&filter_aux));
+			
+			//Find out which x/y coordinates this corresponds to 
 		}
+		//Reset the mode to receive
     CC2500_Strobe(CC2500_STROBE_SRX, 0x00);
 	}
 }
@@ -382,10 +390,10 @@ void proximitySensorTimerCallback(void const* arg){
 
 /* Interrupt service routine on packet recieve */
 void EXTI4_IRQHandler(void) {
-	if(EXTI_GetITStatus(CC2500_SPI_INT_EXTI_LINE) != RESET)
-    {
+	//When the interrupt is raised, send a signal to the wireless thread
+	if(EXTI_GetITStatus(CC2500_SPI_INT_EXTI_LINE) != RESET){
 			osSignalSet(wireless_thread, RX_PKT);
 		}	
-	// clear EXTI inruppt pending bit.
+	//Clear EXTI inruppt pending bit.
 	EXTI_ClearITPendingBit(CC2500_SPI_INT_EXTI_LINE);
 }
