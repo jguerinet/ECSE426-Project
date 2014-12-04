@@ -365,7 +365,7 @@
               <MiscControls>--c99</MiscControls>
               <Define>HSE_VALUE=8000000 USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>.\src;.\inc;.\Accelerometer_Drivers\inc</IncludePath>
+              <IncludePath>.\src;.\inc;.\Accelerometer_Drivers\inc;.\RTE;.\RTE\Device\STM32F407VG</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>

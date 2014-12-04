@@ -9,11 +9,21 @@
 #include <stdio.h>
 #include "cc2500.h"
 
+#define Transmit_Interval  100
 
 // ID for thread
 osThreadId	Rx_thread;
 osThreadId  Tx_thread;
-	
+
+typedef struct packet {
+   uint8_t Src_addr;
+   uint8_t Seq_num;
+   uint8_t Aux_rssi;
+   uint8_t Rssi;
+   uint8_t Crc_id;
+} Packet;
+
+
 void Blinky_GPIO_Init(void){
   GPIO_InitTypeDef GPIO_InitStructure;
 	
@@ -29,22 +39,22 @@ void Blinky_GPIO_Init(void){
 }
 
 void TxPacket(void const *argument) {
-   uint8_t buf[3];
-   buf[0] = SMARTRF_SETTING_ADDR; // src address on the first byte
-   buf[1] = 0x00; // packet sequence number
-   buf[2] = 0x00;
+   Packet pkt;
+   pkt.Src_addr = SMARTRF_SETTING_ADDR; // src address on the first byte
+   pkt.Seq_num = 0x00;  // packet sequence number
+   pkt.Aux_rssi = 0x00; // Aux sequence N/A
    while (1) {
       GPIO_ToggleBits(GPIOD, GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
-      CC2500_TxPacket((uint8_t*)buf, SMARTRF_SETTING_PKTLEN);
-      printf("transmitted byte: SRC: 0x%02x\t\t SEQ: 0x%02x\n", buf[0], buf[1]);
+      CC2500_TxPacket((uint8_t*)&pkt, SMARTRF_SETTING_PKTLEN);
+      printf("Transmitted Data: SRC: 0x%02x\t\t SEQ: 0x%02x\n", pkt.Src_addr, pkt.Seq_num);
       
       // increment the sequence by 1. roll over if reached 255
-      if (buf[1] == 0xFF)
-         buf[1] = 0x00;
+      if (pkt.Seq_num == 0xFF)
+         pkt.Seq_num = 0x00;
       else {
-         buf[1]++;
+         pkt.Seq_num++;
       }
-      osDelay(100);
+      osDelay(Transmit_Interval);
    }
 }
 
