@@ -17,7 +17,7 @@ void initializeProximitySensor() {
 	//Enables the ADC
 	ADC_Cmd(ADC1, ENABLE);
 	
-	//Select the ADC_Channel_14 and set sample time
+	//Select the ADC_Channel_13 and set sample time
 	ADC_RegularChannelConfig(ADC1, ADC_Channel_13, 1, ADC_SampleTime_480Cycles);
 	
 	//Define the initializer struct 
@@ -31,7 +31,7 @@ void initializeProximitySensor() {
 	
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 
-	//we want pin F4
+	//we want pin C3
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
 	
 	//Initialize the LEDs
