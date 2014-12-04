@@ -69,4 +69,6 @@ void drawGrid(void){
 	for (j = 8; j <= 232; j = j+28){
 		LCD_DrawLine(j, 8, 304, LCD_DIR_VERTICAL);
 	}
+	LCD_SetTextColor(LCD_COLOR_GREEN);
+	LCD_DisplayStringLine(LINE(1), (uint8_t*)"TRACKING");
 }
