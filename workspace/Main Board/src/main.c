@@ -16,8 +16,8 @@
 #define PI 3.14159265
 
 /* AREA SIZE (cm) */
-#define MAX_X 240
-#define MAX_Y	240
+#define MAX_X 244
+#define MAX_Y	244
 
 /* Filter Depth */
 #define PROXIMITY_FILTER_DEPTH   20
@@ -31,9 +31,10 @@
 #define PROXIMITY_SENSOR_SIGNAL (int32_t) 0x02
 
 /* TEST BOOLEANS (set to true the part you want to test */
-int motor = 0; 
-int sensor = 0; 
-int lcdDisplay = 0; 
+int motorTest = 0; 
+int sensorTest = 0; 
+int lcdDisplayTest = 0; 
+int motorSpeedTest = 0; 
 
 /* METHODS FROM OTHER FILES */
 //LCD
@@ -52,6 +53,7 @@ extern uint8_t getMotorAngle(void);
 extern void testMotor(void);
 extern void testProximitySensor(void); 
 extern void testLCD(void); 
+extern void testMotorSpeed(void); 
 
 /* THREAD FUNCTIONS */
 //LCD
@@ -112,14 +114,17 @@ Coordinates wirelessCoordinates = {-1, -1};
 
 int main (void) {
 	//Check if we are testing something
-	if(motor){
+	if(motorTest){
 		testMotor();
 	}
-	else if(sensor){
+	else if(sensorTest){
 		testProximitySensor(); 
 	}
-	else if(lcdDisplay){
+	else if(lcdDisplayTest){
 		testLCD(); 
+	}
+	else if(motorSpeedTest){
+		testMotorSpeed(); 
 	}
 	
 	//Initialize CMSIS-RTOS
@@ -219,11 +224,11 @@ void lcd(void const *arg){
 		}
 		
 		//Calculate the new x and y positions to map
-		xMapped = (x * 220 / MAX_X) + 10;
-		yMapped = (y * 300/ MAX_Y) + 10; 
+		xMapped = (x * 224 / MAX_X) + 8;
+		yMapped = (y * 304/ MAX_Y) + 8; 
 		
 		//Show the position on the screen if it is in bounds and existant
-		if (xMapped >= 10 && xMapped <= 230 & yMapped >= 10 && yMapped <= 310){
+		if (xMapped >= 8 && xMapped <= 232 & yMapped >= 8 && yMapped <= 312){
 			drawPosition(xMapped, yMapped);  
 		}
 		else{

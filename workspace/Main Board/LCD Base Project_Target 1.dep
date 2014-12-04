@@ -1,5 +1,5 @@
 Dependencies for Project 'LCD Base Project', Target 'Target 1': (DO NOT MODIFY !)
-F (.\src\main.c)(0x5480182B)(-c --cpu Cortex-M4.fp -D__RTX -D__MICROLIB -g -O0 --apcs=interwork -I.\inc -I.\src -I.\RTE -I.\RTE\Device\STM32F429ZI --c99-I "C:\Users\Julien\Documents\School\McGill\2014-2015\Semester 9\ECSE 426\Final Project\Repository\workspace\Main Board\RTE"-I "C:\Users\Julien\Documents\School\McGill\2014-2015\Semester 9\ECSE 426\Final Project\Repository\workspace\Main Board\RTE\Device\STM32F429ZI"-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS_RTX\INC-I C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\StdPeriph_Driver\inc-D_RTE_ -DSTM32F429_439xx -DHSE_VALUE="8000000" -DUSE_STDPERIPH_DRIVER-o .\obj\main.o --omf_browse .\obj\main.crf --depend .\obj\main.d)
+F (.\src\main.c)(0x5480280D)(-c --cpu Cortex-M4.fp -D__RTX -D__MICROLIB -g -O0 --apcs=interwork -I.\inc -I.\src -I.\RTE -I.\RTE\Device\STM32F429ZI --c99-I "C:\Users\Julien\Documents\School\McGill\2014-2015\Semester 9\ECSE 426\Final Project\Repository\workspace\Main Board\RTE"-I "C:\Users\Julien\Documents\School\McGill\2014-2015\Semester 9\ECSE 426\Final Project\Repository\workspace\Main Board\RTE\Device\STM32F429ZI"-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS_RTX\INC-I C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\StdPeriph_Driver\inc-D_RTE_ -DSTM32F429_439xx -DHSE_VALUE="8000000" -DUSE_STDPERIPH_DRIVER-o .\obj\main.o --omf_browse .\obj\main.crf --depend .\obj\main.d)
 I (src\osObjects.h)(0x547CDA76)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS_RTX\INC\cmsis_os.h)(0x52812238)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5346D4F4)
@@ -388,7 +388,7 @@ I (.\inc\cc2500.h)(0x547FD370)
 I (.\src\osObjects.h)(0x547CDA76)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS_RTX\INC\cmsis_os.h)(0x52812238)
 I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5346D4F4)
-F (.\src\test.c)(0x547F8984)(-c --cpu Cortex-M4.fp -D__RTX -D__MICROLIB -g -O0 --apcs=interwork -I.\inc -I.\src -I.\RTE -I.\RTE\Device\STM32F429ZI --c99-I "C:\Users\Julien\Documents\School\McGill\2014-2015\Semester 9\ECSE 426\Final Project\Repository\workspace\Main Board\RTE"-I "C:\Users\Julien\Documents\School\McGill\2014-2015\Semester 9\ECSE 426\Final Project\Repository\workspace\Main Board\RTE\Device\STM32F429ZI"-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS_RTX\INC-I C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\StdPeriph_Driver\inc-D_RTE_ -DSTM32F429_439xx -DHSE_VALUE="8000000" -DUSE_STDPERIPH_DRIVER-o .\obj\test.o --omf_browse .\obj\test.crf --depend .\obj\test.d)
+F (.\src\test.c)(0x54801D1B)(-c --cpu Cortex-M4.fp -D__RTX -D__MICROLIB -g -O0 --apcs=interwork -I.\inc -I.\src -I.\RTE -I.\RTE\Device\STM32F429ZI --c99-I "C:\Users\Julien\Documents\School\McGill\2014-2015\Semester 9\ECSE 426\Final Project\Repository\workspace\Main Board\RTE"-I "C:\Users\Julien\Documents\School\McGill\2014-2015\Semester 9\ECSE 426\Final Project\Repository\workspace\Main Board\RTE\Device\STM32F429ZI"-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS_RTX\INC-I C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\StdPeriph_Driver\inc-D_RTE_ -DSTM32F429_439xx -DHSE_VALUE="8000000" -DUSE_STDPERIPH_DRIVER-o .\obj\test.o --omf_browse .\obj\test.crf --depend .\obj\test.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5346D4F4)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include\stm32f4xx.h)(0x529F63E2)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include\core_cm4.h)(0x5384C176)
@@ -397,8 +397,8 @@ I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include\core_cmInstr.h)(0x53034B90)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include\core_cmFunc.h)(0x53034B90)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include\core_cm4_simd.h)(0x53034B90)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include\system_stm32f4xx.h)(0x529F63E2)
-I (C:\Users\Julien\Documents\School\McGill\2014-2015\Semester 9\ECSE 426\Final Project\Repository\workspace\Main Board\RTE\Device\STM32F429ZI\stm32f4xx_conf.h)(0x52E67408)
-I (C:\Users\Julien\Documents\School\McGill\2014-2015\Semester 9\ECSE 426\Final Project\Repository\workspace\Main Board\RTE\RTE_Components.h)(0x547FD370)
+I (.\RTE\Device\STM32F429ZI\stm32f4xx_conf.h)(0x52E67408)
+I (.\RTE\RTE_Components.h)(0x547FD370)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\StdPeriph_Driver\inc\stm32f4xx_adc.h)(0x52B455A6)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\StdPeriph_Driver\inc\stm32f4xx_crc.h)(0x52B455A6)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\StdPeriph_Driver\inc\stm32f4xx_dbgmcu.h)(0x52B455A6)
@@ -428,7 +428,8 @@ I (C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\StdPeriph_Driver\inc\stm3
 I (C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\StdPeriph_Driver\inc\stm32f4xx_fmc.h)(0x52B455A6)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\StdPeriph_Driver\inc\stm32f4xx_ltdc.h)(0x52B455A6)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\StdPeriph_Driver\inc\stm32f4xx_sai.h)(0x52B455A6)
-F (.\src\lcd.c)(0x547FF427)(-c --cpu Cortex-M4.fp -D__RTX -D__MICROLIB -g -O0 --apcs=interwork -I.\inc -I.\src -I.\RTE -I.\RTE\Device\STM32F429ZI --c99-I "C:\Users\Julien\Documents\School\McGill\2014-2015\Semester 9\ECSE 426\Final Project\Repository\workspace\Main Board\RTE"-I "C:\Users\Julien\Documents\School\McGill\2014-2015\Semester 9\ECSE 426\Final Project\Repository\workspace\Main Board\RTE\Device\STM32F429ZI"-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS_RTX\INC-I C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\StdPeriph_Driver\inc-D_RTE_ -DSTM32F429_439xx -DHSE_VALUE="8000000" -DUSE_STDPERIPH_DRIVER-o .\obj\lcd.o --omf_browse .\obj\lcd.crf --depend .\obj\lcd.d)
+I (src\filter.h)(0x547FD370)
+F (.\src\lcd.c)(0x548027F8)(-c --cpu Cortex-M4.fp -D__RTX -D__MICROLIB -g -O0 --apcs=interwork -I.\inc -I.\src -I.\RTE -I.\RTE\Device\STM32F429ZI --c99-I "C:\Users\Julien\Documents\School\McGill\2014-2015\Semester 9\ECSE 426\Final Project\Repository\workspace\Main Board\RTE"-I "C:\Users\Julien\Documents\School\McGill\2014-2015\Semester 9\ECSE 426\Final Project\Repository\workspace\Main Board\RTE\Device\STM32F429ZI"-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS_RTX\INC-I C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\StdPeriph_Driver\inc-D_RTE_ -DSTM32F429_439xx -DHSE_VALUE="8000000" -DUSE_STDPERIPH_DRIVER-o .\obj\lcd.o --omf_browse .\obj\lcd.crf --depend .\obj\lcd.d)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include\stm32f4xx.h)(0x529F63E2)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include\core_cm4.h)(0x5384C176)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5346D4F4)

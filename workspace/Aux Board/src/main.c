@@ -56,17 +56,21 @@ void RxPacket(void const *argument){
       //turn on LED on packet RX
 		GPIO_ToggleBits(GPIOD, GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
 		CC2500_RxPackets((uint8_t*)&pkt, SMARTRF_SETTING_PKTLEN + 2);
+		if(pkt.Src_addr == 0x01){
 			 // put the measured RSSI in  byte 3 for main board
       pkt.Aux_rssi = pkt.Rssi;
       //printf("Packet received from user beacon\n");
       printf("SRC: 0x%02x\t\t", pkt.Src_addr);
       printf("SEQ: 0x%02x\t\t", pkt.Seq_num);
       printf("RAW_RSSI: 0x%02x\n", pkt.Rssi);
+			
+			buf = CC2500_Strobe(CC2500_STROBE_SNOP, 0x01);
+			printf("Buffer : 0x%02x\n", buf); 
+		}
       
       // change the source address on the packet
       pkt.Src_addr = SMARTRF_SETTING_ADDR;
       
-			buf = CC2500_Strobe(CC2500_STROBE_SNOP, 0x01);
 		// transmit this packet for main board
       osDelay(100);
       CC2500_TxPacket((uint8_t*)&pkt, SMARTRF_SETTING_PKTLEN);
@@ -117,7 +121,7 @@ void wireless_init() {
 	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOB, CC2500_SPI_INT_EXTI_PIN_SOURCE);
 	EXTI_InitStructure.EXTI_Line = CC2500_SPI_INT_EXTI_LINE;
 	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
-	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
+	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
 	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
 	EXTI_Init(&EXTI_InitStructure);
 	

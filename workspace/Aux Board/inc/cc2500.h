@@ -181,8 +181,8 @@ CC2500_STROBE_SNOP         =      ((uint8_t)0x3D)
 #define SMARTRF_SETTING_TEST0 							0x0B
 #define SMARTRF_SETTING_FIFOTHR 						   0x07
 #define SMARTRF_SETTING_IOCFG2 							0x29
-#define SMARTRF_SETTING_IOCFG0 							0x06
-#define SMARTRF_SETTING_PKTCTRL1						   0x04
+#define SMARTRF_SETTING_IOCFG0 							0x07
+#define SMARTRF_SETTING_PKTCTRL1						   0x0C
 #define SMARTRF_SETTING_PKTCTRL0 						0x04
 #define SMARTRF_SETTING_ADDR 								0x02 // Global Broadcast Address
 #define SMARTRF_SETTING_PKTLEN 							0x03 // Packet Length of 3 bytes (0xFF)

@@ -62,11 +62,11 @@ void drawGrid(void){
 	int i = 0;
 	int j = 0;
 	//Horizontal Lines
-	for (i = 10; i <= 310; i = i+60){
-		LCD_DrawLine(10, i, 220, LCD_DIR_HORIZONTAL);
+	for (i = 8; i <= 312; i = i+38){
+		LCD_DrawLine(8, i, 224, LCD_DIR_HORIZONTAL);
 	}
 	//Vertical lines 
-	for (j = 10; j <= 230; j = j+44){
-		LCD_DrawLine(j, 10, 300, LCD_DIR_VERTICAL);
+	for (j = 8; j <= 232; j = j+28){
+		LCD_DrawLine(j, 8, 304, LCD_DIR_VERTICAL);
 	}
 }
