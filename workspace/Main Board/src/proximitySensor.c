@@ -89,8 +89,14 @@ uint8_t getSensorDistance(void){
 	float root2 = (-1*b - sqrt(pow(b,2) -4*a*c))/(2*a);
 	
 	if(root1 < root2){
+		if(root1 > 120){
+			return 0;
+		}
 		return root1;
 	}else{
+		if(root2 > 120){
+			return 0;
+		}
 		return root2;		
 	}
 

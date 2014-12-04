@@ -206,6 +206,9 @@ void lcd(void const *arg){
 			clearPosition(xMapped, yMapped); 
 		}
 		
+		//Draw the grid
+		drawGrid();
+		
 		//Check if there is a new position
 		if(x == -1 || y == -1){
 			//If there isn't one, continue
@@ -216,10 +219,7 @@ void lcd(void const *arg){
 		
 		//Calculate the new x and y positions to map
 		xMapped = (x * 220 / MAX_X) + 10;
-		yMapped = (y * 300/ MAX_Y) + 10;
-		
-		//Draw the grid
-		drawGrid(); 
+		yMapped = (y * 300/ MAX_Y) + 10; 
 		
 		//Show the position on the screen if it is in bounds and existant
 		if (xMapped >= 10 && xMapped <= 230 & yMapped >= 10 && yMapped <= 310){
@@ -257,8 +257,10 @@ void proximitySensor(void const* argument){
 		//Wait until the display signal is set
 		osSignalWait(PROXIMITY_SENSOR_SIGNAL, osWaitForever);
 		
-		//Get the measured distance from the sensor
-		filter_add(&filter, getSensorDistance());
+		for(int i = 0; i < 10; i++){
+			//Get the measured distance from the sensor
+			filter_add(&filter, getSensorDistance());
+		}
 		uint8_t distance = (uint8_t)filter_avg(&filter); 
 		
 		//printf("Distance: %d\n", distance); 
@@ -316,7 +318,7 @@ void wireless(void const* arg){
 	
 	while(1){
 		osSignalWait(RX_PKT, osWaitForever);
-		GPIO_ToggleBits(GPIOD, GPIO_Pin_13 | GPIO_Pin_14);
+		GPIO_ToggleBits(GPIOG, GPIO_Pin_13 | GPIO_Pin_14);
 		CC2500_Read((uint8_t*)&pkt, CC2500_FIFO_ADDR, SMARTRF_SETTING_PKTLEN + 2);
     
 		// if the packet recieved is from user, store the seq and rssi

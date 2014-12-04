@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include <string.h>
 
+void drawGrid(void);
+
 /**
 	Initializes the LCD screen to a blank screen
 */
@@ -24,6 +26,9 @@ void initializeLCD(void){
 	//Clear the LCD
 	LCD_Clear(LCD_COLOR_WHITE);
 	LCD_SetFont(&Font8x8);
+	
+	//Initial Grid
+	drawGrid(); 
 }
 
 /**

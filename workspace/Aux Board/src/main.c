@@ -71,15 +71,17 @@ void RxPacket(void const *argument){
       
       // wait for the transmission to finish
       
-      //buf = CC2500_Strobe(CC2500_STROBE_SNOP, 0x01);
-      //while ((mode_filter & buf) == 0x20)
-      //   buf = CC2500_Strobe(CC2500_STROBE_SNOP, 0x01);
+      buf = CC2500_Strobe(CC2500_STROBE_SNOP, 0x01);
+      while ((mode_filter & buf) == 0x20){
+				osDelay(10); 
+         buf = CC2500_Strobe(CC2500_STROBE_SNOP, 0x01);
+			}
       // turn off LED on successful Tx
       GPIO_ToggleBits(GPIOD, GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
       
       // put device back to rx mode
       
-      osDelay(100);
+      //osDelay(100);
       CC2500_Strobe(CC2500_STROBE_SRX, 0x00);
 	}
 }
