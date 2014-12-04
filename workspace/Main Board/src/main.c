@@ -33,8 +33,7 @@
 /* TEST BOOLEANS (set to true the part you want to test */
 int motorTest = 0; 
 int sensorTest = 0; 
-int lcdDisplayTest = 0; 
-int motorSpeedTest = 0; 
+int lcdDisplayTest = 0;
 
 /* METHODS FROM OTHER FILES */
 //LCD
@@ -52,8 +51,7 @@ extern uint8_t getMotorAngle(void);
 //Test
 extern void testMotor(void);
 extern void testProximitySensor(void); 
-extern void testLCD(void); 
-extern void testMotorSpeed(void); 
+extern void testLCD(void);
 
 /* THREAD FUNCTIONS */
 //LCD
@@ -90,14 +88,10 @@ osMutexId sensorCoordinatesId;
 osMutexId wirelessCoordinatesId; 
 
 /* TIMER FUNCTIONS */
-//Display
-void displayTimerCallback(void const* arg);
 //Proximity Sensor
 void proximitySensorTimerCallback(void const* arg);
 
 /* TIMERS */
-//Display
-osTimerDef(displayTimer, displayTimerCallback); 
 //Proximity Sensor
 osTimerDef(proximitySensorTimer, proximitySensorTimerCallback); 
 
@@ -122,9 +116,6 @@ int main (void) {
 	}
 	else if(lcdDisplayTest){
 		testLCD(); 
-	}
-	else if(motorSpeedTest){
-		testMotorSpeed(); 
 	}
 	
 	//Initialize CMSIS-RTOS
@@ -167,11 +158,7 @@ void lcd(void const *arg){
 	
 	//This will keep track of the received x and y coordinates
 	int16_t x = -1; 
-	int16_t y = -1; 
-	
-	//Set up the timer and start it
-	osTimerId displayTimerId = osTimerCreate(osTimer(displayTimer), osTimerPeriodic, NULL); 
-	osTimerStart(displayTimerId, 300); 
+	int16_t y = -1;  
 	
 	//Main Loop
 	while(1){
@@ -324,7 +311,10 @@ void proximitySensor(void const* argument){
 			}
 			
 			filter_init(&filter, (int32_t*)filter_buffer, PROXIMITY_FILTER_DEPTH); 
-			filter_init(&angleFilter, (int32_t*)angle_filter_buffer, PROXIMITY_ANGLE_DEPTH); 
+			filter_init(&angleFilter, (int32_t*)angle_filter_buffer, PROXIMITY_ANGLE_DEPTH);
+
+			//Update the screen 
+			osSignalSet(lcd_thread, DISPLAY_SIGNAL); 
 		}
 	}
 }
@@ -380,14 +370,6 @@ void wireless(void const* arg){
 		}
     CC2500_Strobe(CC2500_STROBE_SRX, 0x00);
 	}
-}
-
-/**
-	Handles the timer callback for updating the display
-*/
-void displayTimerCallback(void const* argument){
-	//Send a signal to the lcd thread
-	osSignalSet(lcd_thread, DISPLAY_SIGNAL); 
 }
 
 /**
