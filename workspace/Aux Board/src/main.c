@@ -45,44 +45,36 @@ void RxPacket(void const *argument){
 	Packet pkt;
    GPIO_ResetBits(GPIOD, GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
    mode_filter = 0x70;
-   transmit_mode = 0x10;
+   transmit_mode = 0x20;
 	printf("Thread_started. waitig for signal\n");
    // put reciever in RX mode
 	CC2500_Strobe(CC2500_STROBE_SRX, 0x00);
    
 	while(1){
 		osSignalWait(RX_PKT, osWaitForever);
+		
       //turn on LED on packet RX
 		GPIO_ToggleBits(GPIOD, GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
-      
-		CC2500_Read((uint8_t*)&pkt, CC2500_FIFO_ADDR, SMARTRF_SETTING_PKTLEN + 2);
-      // put the measured RSSI in  byte 3 for main board
+		CC2500_RxPackets((uint8_t*)&pkt, SMARTRF_SETTING_PKTLEN + 2);
+			 // put the measured RSSI in  byte 3 for main board
       pkt.Aux_rssi = pkt.Rssi;
-      printf("Packet received from user beacon\n");
+      //printf("Packet received from user beacon\n");
       printf("SRC: 0x%02x\t\t", pkt.Src_addr);
       printf("SEQ: 0x%02x\t\t", pkt.Seq_num);
       printf("RAW_RSSI: 0x%02x\n", pkt.Rssi);
       
       // change the source address on the packet
       pkt.Src_addr = SMARTRF_SETTING_ADDR;
-      // transmit this packet for main board
+      
+			buf = CC2500_Strobe(CC2500_STROBE_SNOP, 0x01);
+		// transmit this packet for main board
       osDelay(100);
       CC2500_TxPacket((uint8_t*)&pkt, SMARTRF_SETTING_PKTLEN);
-      
-      // wait for the transmission to finish
-      
-      buf = CC2500_Strobe(CC2500_STROBE_SNOP, 0x01);
-      while ((mode_filter & buf) == 0x20){
-				osDelay(10); 
-         buf = CC2500_Strobe(CC2500_STROBE_SNOP, 0x01);
-			}
+		
       // turn off LED on successful Tx
       GPIO_ToggleBits(GPIOD, GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
-      
       // put device back to rx mode
-      
-      //osDelay(100);
-      CC2500_Strobe(CC2500_STROBE_SRX, 0x00);
+      osDelay(100);
 	}
 }
 

@@ -16,11 +16,12 @@
 #define PI 3.14159265
 
 /* AREA SIZE (cm) */
-#define MAX_X 400
-#define MAX_Y	400
+#define MAX_X 240
+#define MAX_Y	240
 
 /* Filter Depth */
 #define PROXIMITY_FILTER_DEPTH   20
+#define PROXIMITY_ANGLE_DEPTH		 20
 #define RSSI_FILTER_DEPTH        20
 
 /* SIGNALS */
@@ -45,7 +46,7 @@ extern void initializeProximitySensor(void);
 extern uint8_t getSensorDistance(void); 
 //Motor
 extern void initializeMotor(void);
-extern void updateMotor(void); 
+extern int updateMotor(void); 
 extern uint8_t getMotorAngle(void);
 //Test
 extern void testMotor(void);
@@ -252,6 +253,11 @@ void proximitySensor(void const* argument){
    uint32_t filter_buffer[PROXIMITY_FILTER_DEPTH];
 	filter_init(&filter, (int32_t*)filter_buffer, PROXIMITY_FILTER_DEPTH); 
 	
+		//Moving Average filter for the angles
+	Filter angleFilter;
+   uint32_t angle_filter_buffer[PROXIMITY_FILTER_DEPTH];
+	filter_init(&angleFilter, (int32_t*)angle_filter_buffer, PROXIMITY_ANGLE_DEPTH); 
+	
 	//Main Loop
 	while(1){
 		//Wait until the display signal is set
@@ -259,41 +265,62 @@ void proximitySensor(void const* argument){
 		
 		for(int i = 0; i < 10; i++){
 			//Get the measured distance from the sensor
-			filter_add(&filter, getSensorDistance());
-		}
-		uint8_t distance = (uint8_t)filter_avg(&filter); 
-		
-		//printf("Distance: %d\n", distance); 
-		
-		//If the distance was 0, just set the x and y coordinates to -1
-		if(distance == 0){
-			x = -1; 
-			y = -1; 
-		}
-		else{
-			//Get the angle from the motor
-			uint8_t angle = getMotorAngle(); 
+			uint16_t measuredDistance = getSensorDistance(); 
 			
-			//From this, calculate x and y 
-			//X is cos(angle) * distance, with angle converted to radians
-			x = cos(angle * PI / 180.0) * distance;
-			//Y is sin(angle) * distance, with angle converted to radians
-			y = sin(angle * PI / 180.0) * distance;
-			
+			//If it's not 0, add it to the filter and the angle
+			if(measuredDistance != 0){
+				filter_add(&filter, measuredDistance);
+				
+				filter_add(&angleFilter, getMotorAngle()); 
+			}
 		}
-		
-		//Get the mutex 
-		osMutexWait(sensorCoordinatesId, osWaitForever); 
-		
-		//Set the x and y values
-		sensorCoordinates.x = x; 
-		sensorCoordinates.y = y; 
-		
-		//Release the mutex
-		osMutexRelease(sensorCoordinatesId); 
 		
 		//Update the motor angle
-		updateMotor(); 
+		int extremity = updateMotor(); 
+		
+		//If we've reached the end, set the average position
+		if(extremity){
+			uint8_t distance = (uint8_t)filter_avg(&filter);  
+			printf("Distance: %d\n", distance); 
+			//Get the angle from the filter
+			uint8_t angle = (uint8_t)filter_avg(&angleFilter); 
+			printf("Angle: %d\n", angle); 
+			
+			//If the distance was smaller than 20 (threshold), just set the x and y coordinates to -1
+			if(distance < 20){
+				x = -1; 
+				y = -1; 
+			}
+			else{				
+				//From this, calculate x and y 
+				//X is cos(angle) * distance, with angle converted to radians
+				x = cos(angle * PI / 180.0) * distance;
+				//Y is sin(angle) * distance, with angle converted to radians
+				y = sin(angle * PI / 180.0) * distance;
+				
+			}
+			
+			//Get the mutex 
+			osMutexWait(sensorCoordinatesId, osWaitForever); 
+			
+			//Set the x and y values
+			sensorCoordinates.x = x; 
+			sensorCoordinates.y = y; 
+			
+			//Release the mutex
+			osMutexRelease(sensorCoordinatesId); 
+			
+			//Reset the filters
+			for(int i = 0; i < PROXIMITY_FILTER_DEPTH; i ++){
+				filter_buffer[i] = 0; 
+			}
+			for(int i = 0; i < PROXIMITY_ANGLE_DEPTH; i++){
+				angle_filter_buffer[i] = 0; 
+			}
+			
+			filter_init(&filter, (int32_t*)filter_buffer, PROXIMITY_FILTER_DEPTH); 
+			filter_init(&angleFilter, (int32_t*)angle_filter_buffer, PROXIMITY_ANGLE_DEPTH); 
+		}
 	}
 }
 
@@ -321,18 +348,23 @@ void wireless(void const* arg){
 		GPIO_ToggleBits(GPIOG, GPIO_Pin_13 | GPIO_Pin_14);
 		CC2500_Read((uint8_t*)&pkt, CC2500_FIFO_ADDR, SMARTRF_SETTING_PKTLEN + 2);
     
+		printf("Source: %u\t\t Sequence: %u\n", pkt.Src_addr, pkt.Seq_num); 
+		
 		// if the packet recieved is from user, store the seq and rssi
 		if (pkt.Src_addr == 0x01) {
 			last_known_seq = pkt.Seq_num;
 			user_rssi_dec = pkt.Rssi;
 		}
 		
+     uint8_t buf = CC2500_Strobe(CC2500_STROBE_SNOP, 0x01);
+		printf("Buffer: 0x%02x\n", buf); 
+		
 		// if the packet recieved is from aux board, and seq number match, we have
 		// a complete set of readings
 		if (pkt.Src_addr == 0x02 && pkt.Seq_num == last_known_seq) {
 			rssi_aux = CC2500_ComputeRssi((float)pkt.Aux_rssi);
 			
-			printf("SEQ: %u\t\tRSSI_USER: %0.02f\t\tRSSI_AUX: %0.02f\n", last_known_seq, rssi_user, rssi_aux);
+			//printf("SEQ: %u\t\tRSSI_USER: %0.02f\t\tRSSI_AUX: %0.02f\n", last_known_seq, rssi_user, rssi_aux);
 			// pass through the filter
          filter_add(&filter_aux, user_rssi_dec);
          filter_add(&filter_user, pkt.Aux_rssi);

@@ -91,8 +91,8 @@ void CC2500_Init(void) {
    reg = (uint8_t)SMARTRF_SETTING_MCSM0;
    CC2500_Write(&reg, CC2500_CFG_REG_MCSM0, 1);
    
-	 //reg = (uint8_t)SMARTRF_SETTING_MCSM1;
-   //CC2500_Write(&reg, CC2500_CFG_REG_MCSM1, 1);
+	 reg = (uint8_t)0x33;
+   CC2500_Write(&reg, CC2500_CFG_REG_MCSM1, 1);
 	 
    reg = (uint8_t)SMARTRF_SETTING_FOCCFG;
    CC2500_Write(&reg, CC2500_CFG_REG_FOCCFG, 1);

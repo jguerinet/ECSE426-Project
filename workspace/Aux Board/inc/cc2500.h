@@ -200,7 +200,7 @@ void CC2500_Init(void);
 void CC2500_Write(uint8_t* pBuffer, uint8_t WriteAddr, uint16_t NumByteToWrite);
 void CC2500_Read(uint8_t* pBuffer, uint8_t ReadAddr, uint16_t NumByteToRead);
 void CC2500_TxPacket(uint8_t* pBuffer, uint16_t NumByteToWrite);
-void CC2500_RxPacket(uint8_t* pBuffer, uint16_t NumByteToRead);
+void CC2500_RxPackets(uint8_t* pBuffer, uint16_t NumByteToRead);
 uint8_t CC2500_Strobe(StrobeCommand StrobeCmd, uint8_t RX_FIFO);
 uint8_t CC2500_StatusReg(uint8_t StatusRegAddr);
 float CC2500_ComputeRssi(float rssi_dec);

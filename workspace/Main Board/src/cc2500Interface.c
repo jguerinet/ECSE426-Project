@@ -36,4 +36,3 @@ void initializeWireless() {
 	
 	NVIC_EnableIRQ(CC2500_SPI_INT_EXTI_IRQn);
 }
-

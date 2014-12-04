@@ -86,15 +86,21 @@ void initializeTIM2(void){
 /**
 	Updates the motor angle
 */
-void updateMotor(void){ 
+int updateMotor(void){ 
+	int extremity = 0; 
+	
 	//Check if we have reached one of the ends
 	if(pulseLength == MAX_PULSE_LENGTH){
-			//Max period length achieved, so switch to decreasing angle
-			increasingAngle = 0; 
+		//Max period length achieved, so switch to decreasing angle
+		increasingAngle = 0; 
+		//Set extremity flag 
+		extremity = 1; 
 	}
 	else if(pulseLength == MIN_PULSE_LENGTH){
-			//Min period length achieved, so switch to increasing angle
-			increasingAngle = 1; 
+		//Min period length achieved, so switch to increasing angle
+		increasingAngle = 1; 
+		//Set extremity flag
+		extremity = 1; 
 	}
 	
 	//If we are increasing the angle, increment the pulse
@@ -108,6 +114,9 @@ void updateMotor(void){
 	
 	//Set the new PWM length 
 	TIM_SetCompare1(TIM2, pulseLength); 
+	
+	//Let main know if we've reached the end
+	return extremity; 
 }
 
 /**
