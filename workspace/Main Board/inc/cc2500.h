@@ -21,38 +21,38 @@
   * @brief  CC2500 SPI Interface pins
   */
 
-#define CC2500_SPI                        SPI2
-#define CC2500_SPI_CLK                    RCC_APB1Periph_SPI2
+#define CC2500_SPI                        SPI4
+#define CC2500_SPI_CLK                    RCC_APB2Periph_SPI4
 
-#define CC2500_SPI_SCK_PIN                GPIO_Pin_13                  /* PB.13 */
-#define CC2500_SPI_SCK_GPIO_PORT          GPIOB                        /* GPIOB */
-#define CC2500_SPI_SCK_GPIO_CLK           RCC_AHB1Periph_GPIOB
-#define CC2500_SPI_SCK_SOURCE             GPIO_PinSource13
-#define CC2500_SPI_SCK_AF                 GPIO_AF_SPI2
+#define CC2500_SPI_SCK_PIN                GPIO_Pin_2                  /* PB.13 */
+#define CC2500_SPI_SCK_GPIO_PORT          GPIOE                        /* GPIOB */
+#define CC2500_SPI_SCK_GPIO_CLK           RCC_AHB1Periph_GPIOE
+#define CC2500_SPI_SCK_SOURCE             GPIO_PinSource2
+#define CC2500_SPI_SCK_AF                 GPIO_AF_SPI4
 
-#define CC2500_SPI_MISO_PIN               GPIO_Pin_14                  /* PB.14 */
-#define CC2500_SPI_MISO_GPIO_PORT         GPIOB                        /* GPIOB */
-#define CC2500_SPI_MISO_GPIO_CLK          RCC_AHB1Periph_GPIOB
-#define CC2500_SPI_MISO_SOURCE            GPIO_PinSource14
-#define CC2500_SPI_MISO_AF                GPIO_AF_SPI2
+#define CC2500_SPI_MISO_PIN               GPIO_Pin_5                  /* PB.14 */
+#define CC2500_SPI_MISO_GPIO_PORT         GPIOE                        /* GPIOB */
+#define CC2500_SPI_MISO_GPIO_CLK          RCC_AHB1Periph_GPIOE
+#define CC2500_SPI_MISO_SOURCE            GPIO_PinSource5
+#define CC2500_SPI_MISO_AF                GPIO_AF_SPI4
 
-#define CC2500_SPI_MOSI_PIN               GPIO_Pin_15                  /* PB.15 */
-#define CC2500_SPI_MOSI_GPIO_PORT         GPIOB                        /* GPIOB */
-#define CC2500_SPI_MOSI_GPIO_CLK          RCC_AHB1Periph_GPIOB
-#define CC2500_SPI_MOSI_SOURCE            GPIO_PinSource15
-#define CC2500_SPI_MOSI_AF                GPIO_AF_SPI2
+#define CC2500_SPI_MOSI_PIN               GPIO_Pin_6                  /* PB.15 */
+#define CC2500_SPI_MOSI_GPIO_PORT         GPIOE                        /* GPIOB */
+#define CC2500_SPI_MOSI_GPIO_CLK          RCC_AHB1Periph_GPIOE
+#define CC2500_SPI_MOSI_SOURCE            GPIO_PinSource6
+#define CC2500_SPI_MOSI_AF                GPIO_AF_SPI4
 
-#define CC2500_SPI_CS_PIN                 GPIO_Pin_11                  /* PB.11 */
-#define CC2500_SPI_CS_GPIO_PORT           GPIOB                        /* GPIOB */
-#define CC2500_SPI_CS_GPIO_CLK            RCC_AHB1Periph_GPIOB
+#define CC2500_SPI_CS_PIN                 GPIO_Pin_3                  /* PB.11 */
+#define CC2500_SPI_CS_GPIO_PORT           GPIOE                        /* GPIOB */
+#define CC2500_SPI_CS_GPIO_CLK            RCC_AHB1Periph_GPIOE
 
-#define CC2500_SPI_INT_PIN                GPIO_Pin_12                  /* PB.12 */
+#define CC2500_SPI_INT_PIN                GPIO_Pin_4                  /* PB.12 */
 #define CC2500_SPI_INT_GPIO_PORT          GPIOB                        /* GPIOB */
-#define CC2500_SPI_INT_GPIO_CLK           RCC_AHB1Periph_GPIOB
-#define CC2500_SPI_INT_EXTI_LINE          EXTI_Line1
-#define CC2500_SPI_INT_EXTI_PORT_SOURCE   EXTI_PortSourceGPIOB
-#define CC2500_SPI_INT_EXTI_PIN_SOURCE    EXTI_PinSource1
-#define CC2500_SPI_INT_EXTI_IRQn          EXTI1_IRQn
+#define CC2500_SPI_INT_GPIO_CLK           RCC_AHB1Periph_GPIOE
+#define CC2500_SPI_INT_EXTI_LINE          EXTI_Line4
+#define CC2500_SPI_INT_EXTI_PORT_SOURCE   EXTI_PortSourceGPIOE
+#define CC2500_SPI_INT_EXTI_PIN_SOURCE    EXTI_PinSource4
+#define CC2500_SPI_INT_EXTI_IRQn          EXTI4_IRQn
 
 
 /******************************************************************************/
@@ -150,13 +150,13 @@ CC2500_STROBE_SNOP         =      ((uint8_t)0x3D)
 /** @defgroup CC2500 Wireless Configuration Settings
   * @{
   */ 
-#define SMARTRF_SETTING_FSCTRL1 						0x0C//0x12 //Frequency offset = 304kHz
+#define SMARTRF_SETTING_FSCTRL1 						0x0C
 #define SMARTRF_SETTING_FSCTRL0 						0x00
-#define SMARTRF_SETTING_FREQ2 							0x5D // Carrier Frequency is 2.433GHz
+#define SMARTRF_SETTING_FREQ2 							0x5E // Carrier Frequency is 2.433GHz
 #define SMARTRF_SETTING_FREQ1 							0x93
 #define SMARTRF_SETTING_FREQ0 							0xB1
 #define SMARTRF_SETTING_MDMCFG4					 		0x0E //0x2D // BW of channel = 541.666kHz
-#define SMARTRF_SETTING_MDMCFG3 						0x3B // Baud Rate = 125kb
+#define SMARTRF_SETTING_MDMCFG3 						0x3B 
 #define SMARTRF_SETTING_MDMCFG2 						0x73 //before demodulator, MSK modulation, 16/16 sync word bits detected
 #define SMARTRF_SETTING_MDMCFG1 						0x42 //
 #define SMARTRF_SETTING_MDMCFG0 						0xF8 // Default Channel Spacing of 200kHz
@@ -169,23 +169,23 @@ CC2500_STROBE_SNOP         =      ((uint8_t)0x3D)
 #define SMARTRF_SETTING_FOCCFG 							0x1D // check datasheet
 #define SMARTRF_SETTING_BSCFG 							0x1C
 #define SMARTRF_SETTING_AGCCTRL2 						0xC7
-#define SMARTRF_SETTING_AGCCTRL1 						0x40 //0x00
+#define SMARTRF_SETTING_AGCCTRL1 						0x40
 #define SMARTRF_SETTING_AGCCTRL0 						0xB0
 #define SMARTRF_SETTING_FSCAL3 							0xEA
 #define SMARTRF_SETTING_FSCAL2							0x0A
 #define SMARTRF_SETTING_FSCAL1 							0x00
-#define SMARTRF_SETTING_FSCAL0 							0x19 //0x11
+#define SMARTRF_SETTING_FSCAL0 							0x19
 #define SMARTRF_SETTING_FSTEST 							0x59
 #define SMARTRF_SETTING_TEST2 							0x88
 #define SMARTRF_SETTING_TEST1 							0x31
 #define SMARTRF_SETTING_TEST0 							0x0B
-#define SMARTRF_SETTING_FIFOTHR 						   0x07
+#define SMARTRF_SETTING_FIFOTHR 						0x07
 #define SMARTRF_SETTING_IOCFG2 							0x29
 #define SMARTRF_SETTING_IOCFG0 							0x06
-#define SMARTRF_SETTING_PKTCTRL1						   0x0C
+#define SMARTRF_SETTING_PKTCTRL1						0x04
 #define SMARTRF_SETTING_PKTCTRL0 						0x04 //0x05 // Fixed Packet Length (0x05)
-#define SMARTRF_SETTING_ADDR 								0x00 // Global Broadcast Address
-#define SMARTRF_SETTING_PKTLEN 							0x02 // Packet Length of 10bytes (0xFF)
+#define SMARTRF_SETTING_ADDR 								0x03 // Global Broadcast Address
+#define SMARTRF_SETTING_PKTLEN 							0x03 // Packet Length of 3 bytes (0xFF)
 
   /** @defgroup CC2500_Exported_Macros
   * @{

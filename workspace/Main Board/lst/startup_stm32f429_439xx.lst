@@ -893,14 +893,16 @@ ARM Macro Assembler    Page 14
               00000000 
               00000000 
 Command Line: --debug --xref --cpu=Cortex-M4.fp --apcs=interwork --depend=.\obj
-\startup_stm32f429_439xx.d -o.\obj\startup_stm32f429_439xx.o -I"C:\ECSE426-Proj
-ect\workspace\Main Board\RTE" -I"C:\ECSE426-Project\workspace\Main Board\RTE\De
-vice\STM32F429ZI" -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include -IC:\Keil
-_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS_RTX\INC -IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx
-_DFP\1.0.8\Device\Include -IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device
-\StdPeriph_Driver\inc --predefine="__RTX SETA 1" --predefine="__MICROLIB SETA 1
-" --list=.\lst\startup_stm32f429_439xx.lst RTE\Device\STM32F429ZI\startup_stm32
-f429_439xx.s
+\startup_stm32f429_439xx.d -o.\obj\startup_stm32f429_439xx.o -I"\vmware-host\Sh
+ared Folders\Documents\git\ecse426\ECSE426-Project\workspace\Main Board\RTE" -I
+"\vmware-host\Shared Folders\Documents\git\ecse426\ECSE426-Project\workspace\Ma
+in Board\RTE\Device\STM32F429ZI" -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\In
+clude -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS_RTX\INC -IC:\Keil_v5\ARM\PACK
+\Keil\STM32F4xx_DFP\1.0.8\Device\Include -IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_D
+FP\1.0.8\Device\StdPeriph_Driver\inc --predefine="__RTX SETA 1" --predefine="__
+EVAL SETA 1" --predefine="__MICROLIB SETA 1" --predefine="_RTE_ SETA 1" --prede
+fine="STM32F429_439xx SETA 1" --list=.\lst\startup_stm32f429_439xx.lst RTE\Devi
+ce\STM32F429ZI\startup_stm32f429_439xx.s
 
 
 
@@ -2081,4 +2083,4 @@ Symbol: __main
       At line 193 in file RTE\Device\STM32F429ZI\startup_stm32f429_439xx.s
 Comment: __main used once
 2 symbols
-453 symbols in table
+456 symbols in table
