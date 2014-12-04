@@ -21,7 +21,7 @@
 
 /* Filter Depth */
 #define PROXIMITY_FILTER_DEPTH   20
-#define PROXIMITY_ANGLE_DEPTH		 20
+#define PROXIMITY_ANGLE_DEPTH		 80
 #define RSSI_FILTER_DEPTH        20
 
 /* SIGNALS */
@@ -247,7 +247,7 @@ void proximitySensor(void const* argument){
 	
 		//Moving Average filter for the angles
 	Filter angleFilter;
-   uint32_t angle_filter_buffer[PROXIMITY_FILTER_DEPTH];
+   uint32_t angle_filter_buffer[PROXIMITY_ANGLE_DEPTH];
 	filter_init(&angleFilter, (int32_t*)angle_filter_buffer, PROXIMITY_ANGLE_DEPTH); 
 	
 	//Main Loop
@@ -259,11 +259,15 @@ void proximitySensor(void const* argument){
 			//Get the measured distance from the sensor
 			uint16_t measuredDistance = getSensorDistance(); 
 			
+			uint8_t angle = getMotorAngle(); 
+			
+			//printf("%u, %u\n", angle, measuredDistance);  
+			
 			//If it's not 0, add it to the filter and the angle
 			if(measuredDistance != 0){
 				filter_add(&filter, measuredDistance);
 				
-				filter_add(&angleFilter, getMotorAngle()); 
+				filter_add(&angleFilter, angle); 
 			}
 		}
 		
@@ -279,7 +283,7 @@ void proximitySensor(void const* argument){
 			printf("Angle: %d\n", angle); 
 			
 			//If the distance was smaller than 20 (threshold), just set the x and y coordinates to -1
-			if(distance < 20){
+				if(distance < 20){
 				x = -1; 
 				y = -1; 
 			}

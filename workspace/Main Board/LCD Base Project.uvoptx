@@ -75,7 +75,7 @@
         <tvExpOptDlg>0</tvExpOptDlg>
         <IsCurrentTarget>1</IsCurrentTarget>
       </OPTFL>
-      <CpuCode>18</CpuCode>
+      <CpuCode>255</CpuCode>
       <DebugOpt>
         <uSim>0</uSim>
         <uTrg>1</uTrg>
@@ -96,6 +96,7 @@
         <tRtrace>1</tRtrace>
         <sRSysVw>1</sRSysVw>
         <tRSysVw>1</tRSysVw>
+        <tPdscDbg>1</tPdscDbg>
         <sRunDeb>0</sRunDeb>
         <sLrtime>0</sLrtime>
         <nTsel>11</nTsel>
@@ -349,7 +350,7 @@
 
   <Group>
     <GroupName>Images</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -437,7 +438,7 @@
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Lib\ARM\arm_cortexM4lf_math.lib</PathWithFileName>
+      <PathWithFileName>C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Lib\ARM\arm_cortexM4lf_math.lib</PathWithFileName>
       <FilenameWithoutPath>arm_cortexM4lf_math.lib</FilenameWithoutPath>
       <RteFlg>1</RteFlg>
       <bShared>0</bShared>
@@ -450,7 +451,7 @@
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS_RTX\LIB\ARM\RTX_CM4.lib</PathWithFileName>
+      <PathWithFileName>C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS_RTX\LIB\ARM\RTX_CM4.lib</PathWithFileName>
       <FilenameWithoutPath>RTX_CM4.lib</FilenameWithoutPath>
       <RteFlg>1</RteFlg>
       <bShared>0</bShared>
@@ -459,7 +460,7 @@
 
   <Group>
     <GroupName>::Device</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>1</RteFlg>
