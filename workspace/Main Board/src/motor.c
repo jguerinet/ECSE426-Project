@@ -2,8 +2,8 @@
 #include "stm32f4xx.h"
 #include "stm32f4xx_conf.h"
 
-#define MIN_PULSE_LENGTH 23
-#define MAX_PULSE_LENGTH 98
+#define MIN_PULSE 23
+#define MAX_PULSE 98
 
 void initializeTIM2(void);
 
@@ -35,7 +35,7 @@ void initializeMotor(void) {
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource5, GPIO_AF_TIM2); 
 	
 	//Set the period length to the min
-	pulseLength = MIN_PULSE_LENGTH;
+	pulseLength = MIN_PULSE;
 	
 	//Initially increasing the angle
 	increasingAngle = 1; 
@@ -90,13 +90,13 @@ int updateMotor(void){
 	int extremity = 0; 
 	
 	//Check if we have reached one of the ends
-	if(pulseLength == MAX_PULSE_LENGTH){
+	if(pulseLength == MAX_PULSE){
 		//Max period length achieved, so switch to decreasing angle
 		increasingAngle = 0; 
 		//Set extremity flag 
 		extremity = 1; 
 	}
-	else if(pulseLength == MIN_PULSE_LENGTH){
+	else if(pulseLength == MIN_PULSE){
 		//Min period length achieved, so switch to increasing angle
 		increasingAngle = 1; 
 		//Set extremity flag
@@ -124,7 +124,7 @@ int updateMotor(void){
 	@return The motor angle
 */
 uint8_t getMotorAngle(void){
-	uint8_t angle = ((pulseLength - MIN_PULSE_LENGTH) * 180) / (MAX_PULSE_LENGTH - MIN_PULSE_LENGTH); 
+	uint8_t angle = ((pulseLength - MIN_PULSE) * 180) / (MAX_PULSE - MIN_PULSE); 
 	
 	//printf("Angle: %d\n", angle); 
 	
